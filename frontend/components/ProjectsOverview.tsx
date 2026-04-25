@@ -13,62 +13,60 @@ export default async function ProjectsOverview() {
   const cards = projects.slice(0, 4);
 
   return (
-    <section className="py-16 md:py-24 bg-gray-50">
+    <section className="section-padding bg-white">
       <div className="container-custom">
-        <div className="text-center mb-12">
-          <h2 className="heading-2 mb-4">Our Projects</h2>
-          <p className="prose-custom max-w-2xl mx-auto">
-            We run a range of projects across India, each tackling specific social challenges
-            and creating lasting impact in communities.
+        <div className="max-w-2xl mb-14">
+          <p className="chip bg-accent-50 text-accent-700 mb-5">Our work</p>
+          <h2 className="heading-2 mb-4">Projects that create lasting impact</h2>
+          <p className="body-lg">
+            Each initiative is designed hand-in-hand with the communities we
+            serve, tackling specific social challenges from the ground up.
           </p>
         </div>
 
         {cards.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cards.map(project => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {cards.map((project, i) => (
               <Link
                 key={project._id}
                 href={`/projects/${project.slug.current}`}
-                className="block h-full"
+                className="group block"
               >
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 card-hover group h-full flex flex-col">
-                  <h3 className="heading-3 mb-3 text-xl group-hover:text-primary-600 transition-colors">
+                <article className="card p-6 card-hover h-full flex flex-col">
+                  <span className="text-xs font-medium text-warm-400 mb-3">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="font-heading text-xl text-warm-900 mb-3 group-hover:text-primary-700 transition-colors">
                     {project.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed flex-grow">
+                  <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow">
                     {project.description}
                   </p>
-                  <span className="inline-flex items-center text-primary-600 font-semibold group-hover:translate-x-1 transition-transform mt-auto text-sm">
-                    View gallery
-                    <svg
-                      className="ml-1 w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
+                  <span className="inline-flex items-center text-primary-700 text-sm font-medium mt-4 group-hover:gap-2 gap-1 transition-all">
+                    View project
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                   </span>
-                </div>
+                </article>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Projects will appear here once added to the CMS.</p>
+          <div className="text-center py-16 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
+            <p className="text-warm-400 font-medium">
+              Projects will appear here once added to the CMS.
+            </p>
           </div>
         )}
 
-        <div className="text-center mt-12">
-          <Link href="/projects" className="btn-primary">
-            View All Projects
-          </Link>
-        </div>
+        {projects.length > 4 && (
+          <div className="text-center mt-12">
+            <Link href="/projects" className="btn-secondary">
+              View all projects
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

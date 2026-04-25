@@ -1,7 +1,7 @@
 import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import compression from 'compression';
+import * as compression from 'compression';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';

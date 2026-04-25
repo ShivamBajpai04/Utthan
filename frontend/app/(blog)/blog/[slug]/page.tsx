@@ -62,8 +62,8 @@ export default async function BlogPostPage({
 
   return (
     <article>
-      {post.cover ? (
-        <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-8">
+      {post.cover && (
+        <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-10">
           <Image
             src={post.cover}
             alt={post.coverAlt ?? post.title}
@@ -73,27 +73,27 @@ export default async function BlogPostPage({
             priority
           />
         </div>
-      ) : null}
+      )}
 
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+      <h1 className="font-heading text-4xl md:text-5xl text-warm-900 leading-tight mb-5">
         {post.title}
       </h1>
 
-      <div className="flex items-center gap-3 text-sm text-gray-400 mb-10">
-        {post.publishedAt ? (
+      <div className="flex items-center gap-3 text-sm text-warm-400 mb-12 pb-8 border-b border-warm-200">
+        {post.publishedAt && (
           <time dateTime={post.publishedAt}>
             {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
           </time>
-        ) : null}
-        {post.author ? <span>· {post.author}</span> : null}
+        )}
+        {post.author && <span>· {post.author}</span>}
       </div>
 
       {post.body ? (
-        <div className="prose prose-lg prose-gray max-w-none">
+        <div className="prose prose-lg prose-stone max-w-none prose-headings:font-heading prose-a:text-primary-700 prose-a:no-underline hover:prose-a:underline">
           <PortableText value={post.body} components={portableTextComponents} />
         </div>
       ) : (
-        <p className="text-gray-500">Content will appear once published in the CMS.</p>
+        <p className="text-warm-400">Content will appear once published in the CMS.</p>
       )}
     </article>
   );

@@ -53,13 +53,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2 group">
             <span
-              className={`font-heading text-2xl transition-colors ${
+              className={`font-heading text-xl md:text-2xl transition-colors ${
                 transparent
                   ? 'text-white group-hover:text-primary-200'
                   : 'text-primary-800 group-hover:text-primary-900'
               }`}
             >
-              Utthan
+              Utthan Institute of Development Studies
             </span>
           </Link>
 

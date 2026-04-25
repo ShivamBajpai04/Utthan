@@ -43,6 +43,12 @@ export default function Hero() {
             >
               Support the mission
             </Link>
+            <Link
+              href="/projects"
+              className="inline-flex items-center justify-center px-7 py-3.5 text-[0.95rem] font-medium rounded-lg bg-white text-primary-900 hover:bg-warm-100 transition-all duration-200"
+            >
+              Book an appointment
+            </Link>
           </div>
         </div>
       </div>

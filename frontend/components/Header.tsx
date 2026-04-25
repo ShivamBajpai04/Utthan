@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -51,16 +52,33 @@ export default function Header() {
     >
       <nav className="container-custom" aria-label="Main">
         <div className="flex items-center justify-between h-14">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span
-              className={`font-heading text-xl md:text-2xl transition-colors ${
-                transparent
-                  ? 'text-white group-hover:text-primary-200'
-                  : 'text-primary-800 group-hover:text-primary-900'
-              }`}
-            >
-              Utthan Institute of Development Studies
-            </span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/images/utthan-logo.jpeg"
+              alt="Utthan logo"
+              width={40}
+              height={40}
+              className="rounded-md"
+              priority
+            />
+            <div className="flex flex-col">
+              <span
+                className={`font-heading text-xl md:text-2xl leading-none transition-colors ${
+                  transparent
+                    ? 'text-white group-hover:text-primary-200'
+                    : 'text-primary-800 group-hover:text-primary-900'
+                }`}
+              >
+                Utthan
+              </span>
+              <span
+                className={`hidden lg:inline text-[0.65rem] font-medium tracking-wide leading-tight mt-0.5 transition-colors ${
+                  transparent ? 'text-white/60' : 'text-warm-400'
+                }`}
+              >
+                Institute of Development Studies
+              </span>
+            </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">

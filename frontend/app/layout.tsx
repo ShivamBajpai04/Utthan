@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Serif_Display, Inter } from 'next/font/google';
 
 import { env } from '@/lib/env';
 
@@ -11,26 +11,33 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+const dmSerif = DM_Serif_Display({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-dm-serif',
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {
-    default: 'Utthan NGO — Empowering Communities, Transforming Lives',
-    template: '%s | Utthan NGO',
+    default: 'Utthan — Empowering Communities, Transforming Lives',
+    template: '%s | Utthan',
   },
   description:
     "A trusted Indian NGO working across women's safety, disability rehabilitation, community health, legal aid, and social justice for decades.",
-  keywords: ['NGO', 'India', 'social work', 'community development'],
-  authors: [{ name: 'Utthan NGO' }],
+  keywords: ['NGO', 'India', 'social work', 'community development', 'Utthan'],
+  authors: [{ name: 'Utthan' }],
   openGraph: {
     type: 'website',
-    siteName: 'Utthan NGO',
+    siteName: 'Utthan',
     locale: 'en_IN',
   },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#2563eb',
+  themeColor: '#15803d',
   width: 'device-width',
   initialScale: 1,
 };
@@ -41,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${dmSerif.variable}`}>
       <body>{children}</body>
     </html>
   );

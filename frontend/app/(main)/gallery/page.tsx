@@ -38,68 +38,74 @@ export default async function GalleryPage({
     : undefined;
 
   return (
-    <div className="py-12 md:py-16">
+    <div className="pt-32 pb-20">
       <div className="container-custom">
-        <h1 className="heading-1 mb-4">Gallery</h1>
-        <p className="prose-custom mb-8 max-w-3xl">
-          {activeProject
-            ? `Showing photos from: ${activeProject.name}`
-            : 'A glimpse into our work, impact, and the communities we serve.'}
-        </p>
+        <div className="max-w-3xl mb-10">
+          <p className="chip bg-accent-50 text-accent-700 mb-5">Gallery</p>
+          <h1 className="heading-1 mb-4">
+            {activeProject ? activeProject.name : 'Gallery'}
+          </h1>
+          <p className="body-xl">
+            {activeProject
+              ? `Photos from the ${activeProject.name} project.`
+              : 'A glimpse into our work, impact, and the communities we serve.'}
+          </p>
+        </div>
 
-        {projects.length > 0 ? (
+        {/* Filter pills */}
+        {projects.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-10">
             <Link
               href="/gallery"
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
                 !filterSlug
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-primary-700 text-white border-primary-700'
+                  : 'bg-white text-warm-600 border-warm-200 hover:border-warm-300 hover:text-warm-800'
               }`}
             >
-              All
+              All photos
             </Link>
             {projects.map(p => (
               <Link
                 key={p._id}
                 href={`/gallery?project=${p.slug.current}`}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
                   filterSlug === p.slug.current
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-700 text-white border-primary-700'
+                    : 'bg-white text-warm-600 border-warm-200 hover:border-warm-300 hover:text-warm-800'
                 }`}
               >
                 {p.name}
               </Link>
             ))}
           </div>
-        ) : null}
+        )}
 
         {photos.length === 0 ? (
-          <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+          <div className="text-center py-20 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
             <svg
-              className="w-16 h-16 mx-auto text-gray-300 mb-4"
+              className="w-14 h-14 mx-auto text-warm-300 mb-4"
               fill="none"
               viewBox="0 0 24 24"
+              strokeWidth={1}
               stroke="currentColor"
               aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={1}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"
               />
             </svg>
-            <p className="text-gray-500 font-medium text-lg">Coming Soon</p>
-            <p className="text-gray-400 mt-2">Gallery photos will be shared shortly.</p>
+            <p className="text-warm-400 font-medium text-lg">Coming soon</p>
+            <p className="text-warm-300 mt-1 text-sm">Gallery photos will be shared shortly.</p>
           </div>
         ) : (
-          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-5 space-y-5">
             {photos.map(photo => (
               <figure
                 key={photo._id}
-                className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500"
+                className="break-inside-avoid relative group rounded-xl overflow-hidden card card-hover"
               >
                 <Image
                   src={photo.url}
@@ -107,18 +113,18 @@ export default async function GalleryPage({
                   width={800}
                   height={600}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="w-full h-auto transform group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-500"
                 />
-                {photo.description || photo.projectName ? (
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    {photo.description ? (
+                {(photo.description || photo.projectName) && (
+                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-4 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    {photo.description && (
                       <p className="text-white text-sm leading-snug">{photo.description}</p>
-                    ) : null}
-                    {photo.projectName ? (
-                      <p className="text-white/70 text-xs mt-1">{photo.projectName}</p>
-                    ) : null}
+                    )}
+                    {photo.projectName && (
+                      <p className="text-white/60 text-xs mt-1">{photo.projectName}</p>
+                    )}
                   </figcaption>
-                ) : null}
+                )}
               </figure>
             ))}
           </div>

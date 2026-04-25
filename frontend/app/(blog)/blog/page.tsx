@@ -20,23 +20,23 @@ export default async function BlogIndexPage() {
   if (posts.length === 0) {
     return (
       <div className="text-center py-20">
-        <h1 className="text-3xl font-bold mb-4">Blog</h1>
-        <p className="text-gray-500">Posts will appear here once published in the CMS.</p>
+        <h1 className="font-heading text-3xl text-warm-900 mb-4">Blog</h1>
+        <p className="text-warm-400">Posts will appear here once published in the CMS.</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-4xl font-bold tracking-tight mb-2">Blog</h1>
-      <p className="text-gray-500 mb-10">Stories, updates, and insights from Utthan.</p>
+      <h1 className="font-heading text-4xl text-warm-900 mb-2">Blog</h1>
+      <p className="text-warm-500 mb-12">Stories, updates, and insights from Utthan.</p>
 
-      <div className="space-y-12">
+      <div className="space-y-14">
         {posts.map(post => (
           <article key={post._id} className="group">
             <Link href={`/blog/${post.slug.current}`} className="block">
-              {post.cover ? (
-                <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-4">
+              {post.cover && (
+                <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-5">
                   <Image
                     src={post.cover}
                     alt={post.coverAlt ?? post.title}
@@ -45,20 +45,18 @@ export default async function BlogIndexPage() {
                     className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                   />
                 </div>
-              ) : null}
-              <h2 className="text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors mb-1">
+              )}
+              <h2 className="font-heading text-2xl text-warm-900 group-hover:text-primary-700 transition-colors mb-2">
                 {post.title}
               </h2>
-              <div className="text-sm text-gray-400">
-                {post.publishedAt
-                  ? format(new Date(post.publishedAt), 'MMMM d, yyyy')
-                  : null}
-                {post.author ? (
+              <div className="text-sm text-warm-400">
+                {post.publishedAt && format(new Date(post.publishedAt), 'MMMM d, yyyy')}
+                {post.author && (
                   <span>
                     {post.publishedAt ? ' · ' : ''}
                     {post.author}
                   </span>
-                ) : null}
+                )}
               </div>
             </Link>
           </article>

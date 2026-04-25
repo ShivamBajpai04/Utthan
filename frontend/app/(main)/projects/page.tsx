@@ -18,33 +18,48 @@ export default async function ProjectsPage() {
   }).catch(() => [] as Project[]);
 
   return (
-    <div className="py-12 md:py-16">
+    <div className="pt-32 pb-20">
       <div className="container-custom">
-        <h1 className="heading-1 mb-4">Our Projects</h1>
-        <p className="prose-custom mb-12 max-w-3xl">
-          Each project is designed to address specific social challenges and create lasting
-          impact in communities across India.
-        </p>
+        <div className="max-w-3xl mb-14">
+          <p className="chip bg-primary-50 text-primary-700 mb-5">Projects</p>
+          <h1 className="heading-1 mb-6">Our projects</h1>
+          <p className="body-xl">
+            Each initiative addresses specific social challenges and is built to
+            create lasting impact in communities across India.
+          </p>
+        </div>
 
         {projects.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">
+          <div className="text-center py-16 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
+            <p className="text-warm-400">
               Projects will be displayed here once added to the CMS.
             </p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map(project => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project, i) => (
               <Link
                 key={project._id}
                 href={`/projects/${project.slug.current}`}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden p-6"
+                className="group block"
               >
-                <h2 className="heading-3 mb-3 text-xl">{project.name}</h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{project.description}</p>
-                <span className="text-primary-600 font-semibold text-sm">
-                  View gallery &rarr;
-                </span>
+                <article className="card p-7 card-hover h-full flex flex-col">
+                  <span className="text-xs font-medium text-warm-400 mb-3">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h2 className="font-heading text-xl text-warm-900 mb-3 group-hover:text-primary-700 transition-colors">
+                    {project.name}
+                  </h2>
+                  <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow mb-4">
+                    {project.description}
+                  </p>
+                  <span className="inline-flex items-center text-primary-700 text-sm font-medium group-hover:gap-2 gap-1 transition-all">
+                    View gallery
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                  </span>
+                </article>
               </Link>
             ))}
           </div>

@@ -24,9 +24,44 @@ export default defineType({
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'text',
-      rows: 4,
-      validation: Rule => Rule.required().max(500),
+      description: 'Rich text description of the project. Use the toolbar to format headings, bold, italic, lists, links, and more.',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'H2', value: 'h2' },
+            { title: 'H3', value: 'h3' },
+            { title: 'Quote', value: 'blockquote' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Bold', value: 'strong' },
+              { title: 'Italic', value: 'em' },
+              { title: 'Underline', value: 'underline' },
+              { title: 'Code', value: 'code' },
+            ],
+            annotations: [
+              {
+                title: 'URL',
+                name: 'link',
+                type: 'object',
+                fields: [
+                  {
+                    title: 'URL',
+                    name: 'href',
+                    type: 'url',
+                    validation: Rule =>
+                      Rule.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto'] }),
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+      validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'order',

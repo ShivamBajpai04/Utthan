@@ -25,8 +25,7 @@ export default defineType({
       title: 'Project',
       type: 'reference',
       to: [{ type: 'project' }],
-      description: 'Which project does this photo belong to?',
-      validation: Rule => Rule.required(),
+      description: 'Which project does this photo belong to? Leave empty for general photos.',
     }),
     defineField({
       name: 'alt',

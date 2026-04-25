@@ -2,11 +2,26 @@ import type { PortableTextBlock } from '@portabletext/react';
 
 export type Slug = { current: string };
 
+/** Extract plain text from Portable Text blocks or a legacy plain string. */
+export function toPlainText(value?: PortableTextBlock[] | string | null): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (!Array.isArray(value)) return '';
+  return value
+    .map(block =>
+      'children' in block
+        ? (block.children as { text?: string }[])?.map(c => c.text ?? '').join('')
+        : '',
+    )
+    .filter(Boolean)
+    .join(' ');
+}
+
 export type Project = {
   _id: string;
   name: string;
   slug: Slug;
-  description: string;
+  description: PortableTextBlock[] | string;
   order?: number | null;
 };
 

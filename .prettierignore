@@ -1,0 +1,7 @@
+node_modules
+frontend/.next
+frontend/out
+backend/dist
+sanity/.sanity
+coverage
+package-lock.json

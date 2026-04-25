@@ -1,0 +1,31 @@
+{
+  "name": "utthan-ngo",
+  "version": "1.0.0",
+  "description": "Public website for Utthan NGO — a content-driven Next.js, NestJS and Sanity monorepo.",
+  "private": true,
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend",
+    "sanity"
+  ],
+  "scripts": {
+    "dev": "concurrently -n frontend,backend,studio -c cyan,magenta,green \"npm -w utthan-frontend run dev\" \"npm -w utthan-backend run start:dev\" \"npm -w utthan-sanity run dev\"",
+    "dev:frontend": "npm -w utthan-frontend run dev",
+    "dev:backend": "npm -w utthan-backend run start:dev",
+    "dev:studio": "npm -w utthan-sanity run dev",
+    "build": "npm -w utthan-frontend run build && npm -w utthan-backend run build",
+    "build:frontend": "npm -w utthan-frontend run build",
+    "build:backend": "npm -w utthan-backend run build",
+    "lint": "npm -w utthan-frontend run lint && npm -w utthan-backend run lint",
+    "typecheck": "npm -w utthan-frontend run typecheck && npm -w utthan-backend run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "typegen": "npm -w utthan-sanity run typegen:extract && npm -w utthan-sanity run typegen:generate"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2"
+  }
+}

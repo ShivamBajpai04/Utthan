@@ -56,9 +56,9 @@ export default function Header() {
             <Image
               src="/images/utthan-logo.jpeg"
               alt="Utthan logo"
-              width={40}
-              height={40}
-              className="rounded-md"
+              width={54}
+              height={41}
+              className="rounded-md h-8 md:h-10 w-auto"
               priority
             />
             <div className="flex flex-col">

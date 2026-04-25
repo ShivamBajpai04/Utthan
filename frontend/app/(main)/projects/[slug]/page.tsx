@@ -1,3 +1,4 @@
+import { PortableText } from '@portabletext/react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +10,7 @@ import {
   projectBySlugQuery,
   projectSlugsQuery,
 } from '@/lib/sanity/queries';
+import { toPlainText } from '@/lib/sanity/types';
 import type { GalleryPhoto, Project } from '@/lib/sanity/types';
 
 type RouteParams = { slug: string };
@@ -37,7 +39,7 @@ export async function generateMetadata({
 
   return {
     title: project.name,
-    description: project.description,
+    description: toPlainText(project.description).slice(0, 160) || undefined,
   };
 }
 
@@ -76,7 +78,15 @@ export default async function ProjectDetailPage({
         </nav>
 
         <h1 className="heading-1 mb-6">{project.name}</h1>
-        <p className="body-xl max-w-2xl mb-14">{project.description}</p>
+        {project.description && (
+          typeof project.description === 'string' ? (
+            <p className="body-xl max-w-2xl mb-14">{project.description}</p>
+          ) : (
+            <div className="prose prose-lg prose-stone max-w-2xl mb-14 prose-headings:font-heading prose-a:text-primary-700 prose-a:no-underline hover:prose-a:underline">
+              <PortableText value={project.description} />
+            </div>
+          )
+        )}
 
         {photos.length > 0 ? (
           <section>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { projectsQuery } from '@/lib/sanity/queries';
+import { toPlainText } from '@/lib/sanity/types';
 import type { Project } from '@/lib/sanity/types';
 
 export const metadata: Metadata = {
@@ -51,7 +52,7 @@ export default async function ProjectsPage() {
                     {project.name}
                   </h2>
                   <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow mb-4">
-                    {project.description}
+                    {toPlainText(project.description)}
                   </p>
                   <span className="inline-flex items-center text-primary-700 text-sm font-medium group-hover:gap-2 gap-1 transition-all">
                     View gallery

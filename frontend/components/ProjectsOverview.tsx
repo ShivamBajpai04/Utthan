@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { projectsQuery } from '@/lib/sanity/queries';
+import { toPlainText } from '@/lib/sanity/types';
 import type { Project } from '@/lib/sanity/types';
 
 export default async function ProjectsOverview() {
@@ -40,7 +41,7 @@ export default async function ProjectsOverview() {
                     {project.name}
                   </h3>
                   <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow">
-                    {project.description}
+                    {toPlainText(project.description)}
                   </p>
                   <span className="inline-flex items-center text-primary-700 text-sm font-medium mt-4 group-hover:gap-2 gap-1 transition-all">
                     View project

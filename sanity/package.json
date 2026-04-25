@@ -14,11 +14,11 @@
     "typegen:generate": "sanity typegen generate"
   },
   "dependencies": {
-    "@sanity/vision": "^4.10.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "sanity": "^4.10.0",
-    "styled-components": "^6.1.14"
+    "@sanity/vision": "^5.22.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "sanity": "^5.22.0",
+    "styled-components": "^6.4.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.7",

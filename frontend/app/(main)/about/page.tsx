@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const timeline = [
-  { year: '1995', text: 'Founded with a mission to serve India\u2019s most marginalised communities.' },
+  { year: '1991', text: 'Founded with a mission to serve India\u2019s most marginalised communities.' },
   { year: '2000s', text: 'Expanded into disability rehabilitation, legal aid, and women\u2019s empowerment programmes.' },
   { year: '2010s', text: 'Grew to 15+ centres across multiple states, reaching over 100,000 beneficiaries.' },
   { year: 'Today', text: 'Continuing to build lasting impact through community-led projects, health initiatives, and advocacy.' },

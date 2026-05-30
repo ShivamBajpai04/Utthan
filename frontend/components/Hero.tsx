@@ -16,7 +16,7 @@ export default function Hero() {
       <div className="container-custom relative z-10 py-32 lg:py-40">
         <div className="max-w-3xl">
           <p className="text-primary-300 text-sm font-medium tracking-widest uppercase mb-6 animate-fade-up">
-            Serving communities since 1995
+            Serving communities since 1991
           </p>
 
           <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white leading-[1.08] mb-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>

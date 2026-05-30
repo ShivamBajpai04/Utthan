@@ -12,6 +12,7 @@ import {
 } from '@/lib/sanity/queries';
 import { toPlainText } from '@/lib/sanity/types';
 import type { GalleryPhoto, Project } from '@/lib/sanity/types';
+import { projectPortableTextComponents } from './portable-text';
 
 type RouteParams = { slug: string };
 
@@ -82,8 +83,8 @@ export default async function ProjectDetailPage({
           typeof project.description === 'string' ? (
             <p className="body-xl max-w-2xl mb-14">{project.description}</p>
           ) : (
-            <div className="prose prose-lg prose-stone max-w-2xl mb-14 prose-headings:font-heading prose-a:text-primary-700 prose-a:no-underline hover:prose-a:underline">
-              <PortableText value={project.description} />
+            <div className="prose prose-lg prose-stone max-w-2xl mb-14">
+              <PortableText value={project.description} components={projectPortableTextComponents} />
             </div>
           )
         )}

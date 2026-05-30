@@ -25,7 +25,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-xl md:text-2xl text-primary-200/80 leading-relaxed max-w-2xl mb-10 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            For three decades, Utthan has worked alongside India&apos;s most
+            Since inception, Utthan has worked along India&apos;s most
             marginalised communities — building dignity, creating opportunity,
             and fostering lasting change.
           </p>

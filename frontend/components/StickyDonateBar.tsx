@@ -3,7 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { contactDetailsConfirmed, siteConfig, telHref } from '@/lib/site';
+import {
+  contactDetailsConfirmed,
+  donateCta,
+  siteConfig,
+  telHref,
+} from '@/lib/site';
 
 /**
  * Persistent donate action for small screens, where the header's Donate button
@@ -22,8 +27,8 @@ export default function StickyDonateBar() {
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex items-center gap-3 px-4 py-3">
-        <Link href="/help#donate" className="btn-primary flex-1 text-center">
-          Donate
+        <Link href={donateCta.href} className="btn-primary flex-1 text-center">
+          {donateCta.shortLabel}
         </Link>
         {contactDetailsConfirmed ? (
           <a

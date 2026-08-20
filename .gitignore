@@ -45,6 +45,8 @@ sanity/dist/
 
 # IDE
 .cursor/
+.claude/
+.agents/
 .idea/
 .vscode/*
 !.vscode/extensions.json

@@ -117,7 +117,11 @@ export default function RootLayout({
       ? {
           address: {
             '@type': 'PostalAddress',
-            streetAddress: siteConfig.contact.address,
+            // Omitted entirely when there is no confirmed street address, so
+            // the property is never published as null or an empty string.
+            ...(siteConfig.contact.address
+              ? { streetAddress: siteConfig.contact.address }
+              : {}),
             addressCountry: 'IN',
           },
           contactPoint: {
@@ -126,7 +130,10 @@ export default function RootLayout({
             email: siteConfig.contact.email,
             telephone: siteConfig.contact.phone,
             areaServed: 'IN',
-            availableLanguage: ['en', 'hi'],
+            // English only until the site actually ships Hindi copy; claiming
+            // a language the site does not serve is the same class of lie as
+            // a placeholder phone number.
+            availableLanguage: ['en'],
           },
         }
       : { address: { '@type': 'PostalAddress', addressCountry: 'IN' } }),

@@ -39,7 +39,7 @@ export default async function BlogIndexPage() {
         </p>
         <div className="text-center py-16 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
           <p className="text-warm-500 font-medium">Our first posts are on the way.</p>
-          <p className="text-warm-400 text-sm mt-1">
+          <p className="text-warm-500 text-sm mt-1">
             Check back soon for stories from the field.
           </p>
         </div>
@@ -91,7 +91,7 @@ export default async function BlogIndexPage() {
               <h2 className="font-heading text-2xl text-warm-900 group-hover:text-primary-700 transition-colors mb-2">
                 {post.title}
               </h2>
-              <div className="text-sm text-warm-400">
+              <div className="text-sm text-warm-500">
                 {post.publishedAt && format(new Date(post.publishedAt), 'MMMM d, yyyy')}
                 {post.author && (
                   <span>

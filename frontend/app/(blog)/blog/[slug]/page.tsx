@@ -118,7 +118,7 @@ export default async function BlogPostPage({
       <JsonLd data={articleJsonLd} />
       <JsonLd data={breadcrumbs} />
 
-      <nav className="mb-8 text-sm text-warm-400" aria-label="Breadcrumb">
+      <nav className="mb-8 text-sm text-warm-500" aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-2">
           <li>
             <Link href={mainSiteHref('/')} className="hover:text-warm-700 transition-colors">
@@ -155,7 +155,7 @@ export default async function BlogPostPage({
         {post.title}
       </h1>
 
-      <div className="flex items-center gap-3 text-sm text-warm-400 mb-12 pb-8 border-b border-warm-200">
+      <div className="flex items-center gap-3 text-sm text-warm-500 mb-12 pb-8 border-b border-warm-200">
         {post.publishedAt && (
           <time dateTime={post.publishedAt}>
             {format(new Date(post.publishedAt), 'MMMM d, yyyy')}
@@ -167,7 +167,7 @@ export default async function BlogPostPage({
       {post.body ? (
         <PortableTextBody value={post.body} />
       ) : (
-        <p className="text-warm-400">This post has no content yet.</p>
+        <p className="text-warm-500">This post has no content yet.</p>
       )}
 
       <div className="mt-16 pt-8 border-t border-warm-200">

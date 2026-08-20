@@ -5,6 +5,7 @@ import { resolveNavHref } from '@/lib/seo';
 import {
   contactDetailsConfirmed,
   decadesOfService,
+  donateCta,
   siteConfig,
   telHref,
 } from '@/lib/site';
@@ -18,7 +19,9 @@ const quickLinks = [
 
 const involveLinks = [
   { href: '/help', label: 'Get Involved' },
-  { href: '/help#donate', label: 'Donate' },
+  // Reads from the shared CTA so the footer cannot promise "Donate" while
+  // every other button on the site says the giving channel is not open yet.
+  { href: donateCta.href, label: donateCta.shortLabel },
   { href: '/help#volunteer', label: 'Volunteer' },
   { href: '/help#collaborate', label: 'Collaborate' },
   { href: '/help#contact', label: 'Contact' },
@@ -49,9 +52,10 @@ export default function Footer() {
               spanning over {decadesOfService()}.
             </p>
 
-            {/* Placeholder details stay unlinked until confirmed. */}
+            {/* Placeholder details stay unlinked until confirmed. A null
+                address renders nothing rather than an empty line. */}
             <address className="not-italic text-sm mt-6 space-y-1.5">
-              <p className="max-w-xs">{address}</p>
+              {address && <p className="max-w-xs">{address}</p>}
               <p>
                 {live ? (
                   <a href={telHref(phone)} className="hover:text-white transition-colors">
@@ -113,7 +117,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 pt-8 border-t border-primary-800/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-primary-200/40">
+          {/* /40 and /50 gave 3.19:1 and 4.18:1 on this ground, both under AA
+              at 12px. /70 lands at 4.65:1. */}
+          <p className="text-xs text-primary-200/70">
             &copy; {year} {siteConfig.legalName}. All rights reserved.
           </p>
           <ul className="flex items-center gap-5">
@@ -121,7 +127,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-xs text-primary-200/50 hover:text-white transition-colors"
+                  className="text-xs text-primary-200/70 hover:text-white transition-colors"
                 >
                   {link.label}
                 </Link>

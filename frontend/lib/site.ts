@@ -28,11 +28,17 @@ type SiteConfig = {
   tagline: string;
   description: string;
   logo: { src: string; width: number; height: number };
-  contact: { address: string; phone: string; email: string };
+  /**
+   * `address` is nullable on purpose. A postal address is the one contact
+   * detail the site can honestly omit — people act on phone and email, but a
+   * wrong street address sends someone on a journey. Null renders nothing
+   * anywhere and is withheld from structured data; it is not a placeholder.
+   */
+  contact: { address: string | null; phone: string; email: string };
 };
 
 /**
- * Whether the contact details and centre addresses below are real.
+ * Whether the contact details below are real.
  *
  * While this is `false` the details still render, so the layout can be
  * reviewed, but they are deliberately inert: no `tel:`/`mailto:`/maps links,
@@ -40,9 +46,86 @@ type SiteConfig = {
  * data. A fabricated phone number or address is worse than none — search
  * engines cache it and people act on it.
  *
- * Replace the placeholders below, then set this to `true`.
+ * Now `true`: the phone and email below are the organisation's real details.
+ * There is deliberately no postal address rather than a placeholder one, and
+ * `centres` is empty for the same reason. `scripts/check-launch-readiness.mjs`
+ * fails the build if this is `true` while any placeholder text survives.
  */
-export const contactDetailsConfirmed = false;
+export const contactDetailsConfirmed = true;
+
+/**
+ * How money can actually reach the organisation right now.
+ *
+ * Nothing here is invented: every field starts empty, and the UI renders only
+ * what is filled in. While `qrImage`, `upiId` and `bankTransfer` are all null
+ * there is no way to give, so the donate CTAs must not promise a transaction —
+ * see `givingIsLive` and `donateCta` below, which every Donate button reads
+ * from.
+ *
+ * Setting any one of the three is enough: the funnel becomes a real one, all
+ * five CTAs relabel from "Support us" to "Donate", and the "we are still
+ * setting up" note on /help is replaced by the actual details. No component
+ * changes needed.
+ */
+export const giving: {
+  /**
+   * A payment QR code — the lowest-effort way to make giving real: no gateway,
+   * no backend, no card data touching this site. Drop the image in
+   * `public/images/` and point `src` at it.
+   *
+   * `alt` must name what scanning it does, not what the image is: a screen
+   * reader user cannot scan a QR code, so "QR code" alone tells them nothing
+   * actionable. Pair it with `upiId` where possible so there is a
+   * copy-pasteable equivalent.
+   */
+  qrImage: { src: string; alt: string } | null;
+  upiId: string | null;
+  bankTransfer: {
+    accountName: string;
+    accountNumber: string;
+    ifsc: string;
+    bankName: string;
+  } | null;
+  /** Registration numbers donors look for before giving. */
+  registrations: { label: string; value: string }[];
+  /** Suggested amounts and what each one actually funds. */
+  tiers: { amount: number; funds: string }[];
+} = {
+  qrImage: null,
+  upiId: null,
+  bankTransfer: null,
+  registrations: [],
+  tiers: [],
+};
+
+/** True once a visitor can complete a donation without contacting anyone. */
+export const givingIsLive =
+  giving.qrImage !== null ||
+  giving.upiId !== null ||
+  giving.bankTransfer !== null;
+
+/**
+ * The donate CTA's label and destination.
+ *
+ * Until giving is live this is an enquiry, not a transaction. A button that
+ * says "Donate" and cannot take a donation costs more trust than it earns.
+ *
+ * `shortLabel` is for the persistent chrome — header, footer, sticky bar —
+ * which can share a viewport with the in-content ask. Two identical buttons
+ * in one screen read as a rendering bug, not as emphasis.
+ */
+export const donateCta = givingIsLive
+  ? { label: 'Donate', shortLabel: 'Donate', href: '/help#donate' }
+  : { label: 'Support our work', shortLabel: 'Support us', href: '/help#donate' };
+
+/** Indian rupees, no decimals — donation amounts are always whole. */
+export function formatRupees(amount: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
 
 export const siteConfig: SiteConfig = {
   legalName: 'Utthan Institute of Development Studies',
@@ -52,11 +135,11 @@ export const siteConfig: SiteConfig = {
   description:
     "A trusted Indian NGO working across women's safety, disability rehabilitation, community health, legal aid, and social justice.",
   logo: { src: '/images/utthan-logo.png', width: 480, height: 365 },
-  /** Placeholders — see `contactDetailsConfirmed` before going live. */
   contact: {
-    address: '00 Example Road, Example Nagar, New Delhi, Delhi 110001',
-    phone: '+91 00000 00000',
-    email: 'contact@example.org',
+    // No postal address published yet — see the type note above.
+    address: null,
+    phone: '+91 94160 23379',
+    email: 'pramodkumarbajpai@gmail.com',
   },
 };
 
@@ -69,21 +152,17 @@ export type Centre = {
   mapsQuery: string;
 };
 
-/** Centres visitors can travel to. Placeholders until confirmed. */
-export const centres: Centre[] = [
-  {
-    id: 'head-office',
-    name: 'Head Office',
-    address: '00 Example Road, Example Nagar, New Delhi, Delhi 110001',
-    mapsQuery: 'Utthan Institute of Development Studies, New Delhi',
-  },
-  {
-    id: 'koshish-centre',
-    name: 'Koshish — Disability Rehabilitation Centre',
-    address: '00 Example Street, Example Colony, New Delhi, Delhi 110002',
-    mapsQuery: 'Koshish Disability Rehabilitation Centre, New Delhi',
-  },
-];
+/**
+ * Centres visitors can travel to.
+ *
+ * Empty until real addresses exist. The "Visit us" section on /help hides
+ * itself while this is empty rather than showing invented locations — the two
+ * entries that used to live here were "00 Example Road" placeholders, and a
+ * fake address for a disability rehabilitation centre is the worst possible
+ * thing to publish, because the people most likely to act on it are the least
+ * able to absorb a wasted journey.
+ */
+export const centres: Centre[] = [];
 
 /** Google Maps link that drops a pin on the place. */
 export function mapsSearchUrl(query: string): string {
@@ -151,13 +230,29 @@ export const values: {
   },
 ];
 
-/** Headline numbers. Kept here so the about-page timeline and the impact
- *  section can never drift apart. */
+/**
+ * Headline numbers.
+ *
+ * Every figure is either derived from `FOUNDING_YEAR` or quoted from the
+ * organisation's own published project descriptions in Sanity — the source is
+ * noted on each line. The previous "100K+ Lives Touched", "25+ Active
+ * Programmes" and "15+ Centres & Locations" had no source anywhere and were
+ * removed: a round number a donor cannot verify costs more trust than a
+ * specific one earns, especially when the real figures were already published
+ * three sections further down the same page.
+ *
+ * Three of these four come from the Mahila Suraksha and Vikas Manch
+ * description. Worth broadening once the other programmes publish figures of
+ * their own — replace, do not pad.
+ */
 export function impactStats() {
   return [
     { value: `${yearsOfService()}+`, label: 'Years of Service' },
-    { value: '100K+', label: 'Lives Touched' },
-    { value: '25+', label: 'Active Programmes' },
-    { value: '15+', label: 'Centres & Locations' },
+    // "over 15000 cases of family disputes have been settled so far"
+    { value: '15,000+', label: 'Family Disputes Settled' },
+    // "About 10000 women are associated with our Mahila Suraksha … programme"
+    { value: '10,000+', label: 'Women in Our Collectives' },
+    // "Over 127 units of grassroots women's groups"
+    { value: '127', label: "Grassroots Women's Groups" },
   ];
 }

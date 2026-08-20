@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { excerpt } from '@/lib/excerpt';
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { projectsQuery } from '@/lib/sanity/queries';
-import { toPlainText } from '@/lib/sanity/types';
 import type { Project } from '@/lib/sanity/types';
 import { siteConfig } from '@/lib/site';
 
@@ -45,7 +45,7 @@ export default async function ProjectsPage() {
             <p className="text-warm-500 font-medium">
               Our projects will be listed here soon.
             </p>
-            <p className="text-warm-400 text-sm mt-1 mb-6">
+            <p className="text-warm-500 text-sm mt-1 mb-6">
               In the meantime, read about the work we do.
             </p>
             <Link href="/about" className="btn-secondary">
@@ -54,30 +54,35 @@ export default async function ProjectsPage() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, i) => (
-              <Link
+            {projects.map(project => (
+              <article
                 key={project._id}
-                href={`/projects/${project.slug.current}`}
-                className="group block"
+                className="card p-7 card-hover h-full flex flex-col group relative"
               >
-                <article className="card p-7 card-hover h-full flex flex-col">
-                  <span className="text-xs font-medium text-warm-400 mb-3">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <h2 className="font-heading text-xl text-warm-900 mb-3 group-hover:text-primary-700 transition-colors">
+                <h2 className="font-heading text-xl text-warm-900 mb-3">
+                  {/* Title-only link so the description stays out of the
+                      accessible name; ::after restores the whole card as the
+                      hit area, which is what the hover state promises. */}
+                  <Link
+                    href={`/projects/${project.slug.current}`}
+                    className="group-hover:text-primary-700 transition-colors after:absolute after:inset-0 after:rounded-2xl"
+                  >
                     {project.name}
-                  </h2>
-                  <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow mb-4">
-                    {toPlainText(project.description)}
-                  </p>
-                  <span className="inline-flex items-center text-primary-700 text-sm font-medium group-hover:gap-2 gap-1 transition-all">
-                    View project
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                  </span>
-                </article>
-              </Link>
+                  </Link>
+                </h2>
+                <p className="text-warm-500 text-sm leading-relaxed grow mb-4">
+                  {excerpt(project.description)}
+                </p>
+                <span
+                  className="inline-flex items-center text-primary-700 text-sm font-medium gap-1 group-hover:gap-2 transition-all"
+                  aria-hidden="true"
+                >
+                  View project
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </span>
+              </article>
             ))}
           </div>
         )}

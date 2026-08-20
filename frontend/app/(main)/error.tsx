@@ -33,7 +33,7 @@ export default function MainError({
           </Link>
         </div>
         {error.digest && (
-          <p className="text-xs text-warm-400 mt-8">
+          <p className="text-xs text-warm-500 mt-8">
             Reference code: <span className="font-mono">{error.digest}</span>
           </p>
         )}

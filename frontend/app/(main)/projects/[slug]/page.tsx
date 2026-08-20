@@ -113,7 +113,7 @@ export default async function ProjectDetailPage({
 
       <div className="container-narrow">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm text-warm-400" aria-label="Breadcrumb">
+        <nav className="mb-8 text-sm text-warm-500" aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-x-2">
             <li>
               <Link href="/" className="hover:text-warm-600 transition-colors">
@@ -173,7 +173,7 @@ export default async function ProjectDetailPage({
           </section>
         ) : (
           <div className="text-center py-14 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
-            <p className="text-warm-400">
+            <p className="text-warm-500">
               Photos from this project will be shared soon.
             </p>
           </div>

@@ -40,12 +40,12 @@ export default async function ProjectsOverview() {
                   <h3 className="font-heading text-xl text-warm-900 mb-3 group-hover:text-primary-700 transition-colors">
                     {project.name}
                   </h3>
-                  <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 flex-grow">
+                  <p className="text-warm-500 text-sm leading-relaxed line-clamp-3 grow">
                     {toPlainText(project.description)}
                   </p>
                   <span className="inline-flex items-center text-primary-700 text-sm font-medium mt-4 group-hover:gap-2 gap-1 transition-all">
                     View project
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                   </span>
@@ -56,15 +56,19 @@ export default async function ProjectsOverview() {
         ) : (
           <div className="text-center py-16 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
             <p className="text-warm-400 font-medium">
-              Projects will appear here once added to the CMS.
+              Our projects will be listed here soon.
             </p>
           </div>
         )}
 
-        {projects.length > 4 && (
+        {/* Always offer the way through to the full list — previously this
+            only appeared once there were more than four projects. */}
+        {projects.length > 0 && (
           <div className="text-center mt-12">
             <Link href="/projects" className="btn-secondary">
-              View all projects
+              {projects.length > cards.length
+                ? `View all ${projects.length} projects`
+                : 'View all projects'}
             </Link>
           </div>
         )}

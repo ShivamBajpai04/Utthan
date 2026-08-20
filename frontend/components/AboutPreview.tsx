@@ -1,43 +1,7 @@
 import Link from 'next/link';
 
-const values = [
-  {
-    title: 'Dignity',
-    description: 'Respecting the inherent worth of every individual we serve.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Participation',
-    description: 'Communities lead their own transformation — we walk alongside them.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Inclusion',
-    description: 'Every voice matters, especially those society often overlooks.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5a17.92 17.92 0 0 1-8.716-2.247m0 0A8.966 8.966 0 0 1 3 12c0-1.264.26-2.466.73-3.555" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Justice',
-    description: 'Advocating for rights, equity, and fairness in all our endeavours.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
-      </svg>
-    ),
-  },
-];
+import ValueIcon from '@/components/ValueIcon';
+import { decadesOfService, values } from '@/lib/site';
 
 export default function AboutPreview() {
   return (
@@ -48,7 +12,7 @@ export default function AboutPreview() {
           <div>
             <p className="chip bg-primary-50 text-primary-700 mb-5">Who we are</p>
             <h2 className="heading-2 mb-6">
-              Three decades of grassroots social work across India
+              Over {decadesOfService()} of grassroots social work across India
             </h2>
             <div className="space-y-4 body-lg mb-8">
               <p>
@@ -67,21 +31,25 @@ export default function AboutPreview() {
             </Link>
           </div>
 
-          {/* Right — values grid */}
-          <div className="grid sm:grid-cols-2 gap-5">
-            {values.map(v => (
-              <div
-                key={v.title}
-                className="card p-6 card-hover"
-              >
-                <div className="w-10 h-10 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center mb-4">
-                  {v.icon}
+          {/* Right — the values, shared with the About page so the two can
+              never list a different set. */}
+          <ul className="space-y-4">
+            {values.map(value => (
+              <li key={value.id} className="card card-hover p-5 flex gap-4">
+                <div className="w-10 h-10 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center shrink-0">
+                  <ValueIcon id={value.id} />
                 </div>
-                <h3 className="font-heading text-lg text-warm-900 mb-2">{v.title}</h3>
-                <p className="text-warm-500 text-sm leading-relaxed">{v.description}</p>
-              </div>
+                <div>
+                  <h3 className="font-heading text-lg text-warm-900 mb-1">
+                    {value.title}
+                  </h3>
+                  <p className="text-warm-500 text-sm leading-relaxed">
+                    {value.description}
+                  </p>
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </section>

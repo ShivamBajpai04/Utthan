@@ -27,6 +27,14 @@ export const projectSlugsQuery = defineQuery(`
   *[_type == "project" && defined(slug.current) && ${notDraft}][].slug.current
 `);
 
+/** Slug plus last-edit time, for sitemap `lastModified`. */
+export const projectSitemapQuery = defineQuery(`
+  *[_type == "project" && defined(slug.current) && ${notDraft}] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
 // ── Gallery ─────────────────────────────────────────────────────────────
 
 export const galleryPhotosQuery = defineQuery(`
@@ -72,7 +80,11 @@ export const blogPostBySlugQuery = defineQuery(`
     _id,
     title,
     slug,
-    body,
+    // Dereference inline images so the renderer receives a usable asset URL.
+    body[] {
+      ...,
+      _type == "image" => { ..., "asset": asset->{url} }
+    },
     "cover": cover.asset->url,
     "coverAlt": cover.alt,
     "author": author->name,
@@ -82,4 +94,13 @@ export const blogPostBySlugQuery = defineQuery(`
 
 export const blogPostSlugsQuery = defineQuery(`
   *[_type == "post" && defined(slug.current) && ${notDraft}][].slug.current
+`);
+
+/** Slug plus dates, for sitemap `lastModified`. */
+export const blogPostSitemapQuery = defineQuery(`
+  *[_type == "post" && defined(slug.current) && ${notDraft}] {
+    "slug": slug.current,
+    publishedAt,
+    _updatedAt
+  }
 `);

@@ -17,7 +17,7 @@ if (!projectId) {
 
 export default defineConfig({
   name: 'default',
-  title: 'Utthan NGO CMS',
+  title: 'Utthan Institute of Development Studies — CMS',
 
   projectId,
   dataset,

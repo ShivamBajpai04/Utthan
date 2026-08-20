@@ -5,10 +5,22 @@ import Link from 'next/link';
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { galleryPhotosQuery, projectsQuery } from '@/lib/sanity/queries';
 import type { GalleryPhoto, Project } from '@/lib/sanity/types';
+import { siteConfig } from '@/lib/site';
+
+const description =
+  'A glimpse into our work, impact, and the communities we serve across India.';
 
 export const metadata: Metadata = {
   title: 'Gallery',
-  description: 'A glimpse into our work, impact, and the communities we serve.',
+  description,
+  // Filtered views (?project=…) are the same page, so they all canonicalise here.
+  alternates: { canonical: '/gallery' },
+  openGraph: {
+    type: 'website',
+    url: '/gallery',
+    title: `Gallery | ${siteConfig.legalName}`,
+    description,
+  },
 };
 
 export default async function GalleryPage({
@@ -29,6 +41,15 @@ export default async function GalleryPage({
     }).catch(() => [] as Project[]),
   ]);
 
+  // Only offer a filter for projects that actually have photos, so no pill
+  // leads to an empty result.
+  const countBySlug = allPhotos.reduce<Record<string, number>>((acc, photo) => {
+    if (photo.projectSlug) acc[photo.projectSlug] = (acc[photo.projectSlug] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const filterableProjects = projects.filter(p => countBySlug[p.slug.current]);
+
   const photos = filterSlug
     ? allPhotos.filter(p => p.projectSlug === filterSlug)
     : allPhotos;
@@ -36,6 +57,13 @@ export default async function GalleryPage({
   const activeProject = filterSlug
     ? projects.find(p => p.slug.current === filterSlug)
     : undefined;
+
+  const pillClass = (active: boolean) =>
+    `px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
+      active
+        ? 'bg-primary-700 text-white border-primary-700'
+        : 'bg-white text-warm-600 border-warm-200 hover:border-warm-300 hover:text-warm-800'
+    }`;
 
   return (
     <div className="pt-32 pb-20">
@@ -50,32 +78,41 @@ export default async function GalleryPage({
               ? `Photos from the ${activeProject.name} project.`
               : 'A glimpse into our work, impact, and the communities we serve.'}
           </p>
+          {activeProject && (
+            <Link
+              href={`/projects/${activeProject.slug.current}`}
+              className="inline-flex items-center gap-1.5 text-primary-700 font-medium mt-4 hover:text-primary-800 transition-colors"
+            >
+              Read about this project
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          )}
         </div>
 
         {/* Filter pills */}
-        {projects.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-10">
+        {filterableProjects.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter photos by project">
             <Link
               href="/gallery"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
-                !filterSlug
-                  ? 'bg-primary-700 text-white border-primary-700'
-                  : 'bg-white text-warm-600 border-warm-200 hover:border-warm-300 hover:text-warm-800'
-              }`}
+              aria-current={!filterSlug ? 'true' : undefined}
+              className={pillClass(!filterSlug)}
             >
               All photos
+              <span className="ml-1.5 opacity-60">{allPhotos.length}</span>
             </Link>
-            {projects.map(p => (
+            {filterableProjects.map(p => (
               <Link
                 key={p._id}
                 href={`/gallery?project=${p.slug.current}`}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
-                  filterSlug === p.slug.current
-                    ? 'bg-primary-700 text-white border-primary-700'
-                    : 'bg-white text-warm-600 border-warm-200 hover:border-warm-300 hover:text-warm-800'
-                }`}
+                aria-current={filterSlug === p.slug.current ? 'true' : undefined}
+                className={pillClass(filterSlug === p.slug.current)}
               >
                 {p.name}
+                <span className="ml-1.5 opacity-60">
+                  {countBySlug[p.slug.current]}
+                </span>
               </Link>
             ))}
           </div>
@@ -97,8 +134,26 @@ export default async function GalleryPage({
                 d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"
               />
             </svg>
-            <p className="text-warm-400 font-medium text-lg">Coming soon</p>
-            <p className="text-warm-300 mt-1 text-sm">Gallery photos will be shared shortly.</p>
+            {filterSlug ? (
+              <>
+                <p className="text-warm-500 font-medium text-lg">
+                  No photos for this project yet
+                </p>
+                <p className="text-warm-400 mt-1 mb-6 text-sm">
+                  Photos from this project will be shared soon.
+                </p>
+                <Link href="/gallery" className="btn-secondary">
+                  View all photos
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="text-warm-500 font-medium text-lg">Coming soon</p>
+                <p className="text-warm-400 mt-1 text-sm">
+                  Photos from our work will be shared shortly.
+                </p>
+              </>
+            )}
           </div>
         ) : (
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-5 space-y-5">
@@ -109,19 +164,21 @@ export default async function GalleryPage({
               >
                 <Image
                   src={photo.url}
-                  alt={photo.alt ?? photo.description ?? 'Gallery photo'}
+                  alt={photo.alt ?? photo.description ?? 'Photo of Utthan’s work'}
                   width={800}
                   height={600}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="w-full h-auto group-hover:scale-[1.03] transition-transform duration-500"
                 />
                 {(photo.description || photo.projectName) && (
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-4 pt-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  // Captions stay visible on touch devices, where there is no
+                  // hover to reveal them.
+                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent p-4 pt-10 md:translate-y-full md:group-hover:translate-y-0 md:transition-transform md:duration-300">
                     {photo.description && (
                       <p className="text-white text-sm leading-snug">{photo.description}</p>
                     )}
                     {photo.projectName && (
-                      <p className="text-white/60 text-xs mt-1">{photo.projectName}</p>
+                      <p className="text-white/70 text-xs mt-1">{photo.projectName}</p>
                     )}
                   </figcaption>
                 )}

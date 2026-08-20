@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import BrandLockup from '@/components/BrandLockup';
+import { decadesOfService, siteConfig } from '@/lib/site';
+
 const quickLinks = [
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
@@ -8,6 +11,7 @@ const quickLinks = [
 ];
 
 const involveLinks = [
+  { href: '/help', label: 'Get Involved' },
   { href: '/help#donate', label: 'Donate' },
   { href: '/help#volunteer', label: 'Volunteer' },
   { href: '/help#collaborate', label: 'Collaborate' },
@@ -16,6 +20,8 @@ const involveLinks = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { address, phone, email } = siteConfig.contact;
+  const hasContact = Boolean(address || phone || email);
 
   return (
     <footer className="bg-primary-950 text-primary-200/70">
@@ -23,20 +29,47 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           {/* Brand */}
           <div className="md:col-span-5">
-            <Link href="/" className="inline-block mb-4">
-              <span className="font-heading text-2xl text-white">Utthan</span>
+            <Link href="/" className="inline-block mb-5">
+              <BrandLockup size="md" tone="dark" />
             </Link>
             <p className="text-sm leading-relaxed max-w-sm">
-              A trusted Indian NGO empowering communities and transforming lives
-              through dedicated social work spanning three decades.
+              {siteConfig.legalName} is a trusted Indian NGO empowering
+              communities and transforming lives through dedicated social work
+              spanning over {decadesOfService()}.
             </p>
+
+            {hasContact && (
+              <address className="not-italic text-sm mt-6 space-y-1.5">
+                {address && <p className="max-w-xs">{address}</p>}
+                {phone && (
+                  <p>
+                    <a
+                      href={`tel:${phone.replace(/[^+\d]/g, '')}`}
+                      className="hover:text-white transition-colors"
+                    >
+                      {phone}
+                    </a>
+                  </p>
+                )}
+                {email && (
+                  <p>
+                    <a
+                      href={`mailto:${email}`}
+                      className="hover:text-white transition-colors"
+                    >
+                      {email}
+                    </a>
+                  </p>
+                )}
+              </address>
+            )}
           </div>
 
           {/* Quick links */}
           <div className="md:col-span-3">
-            <h4 className="text-white text-sm font-semibold tracking-wide uppercase mb-4">
+            <h2 className="text-white text-sm font-semibold tracking-wide uppercase mb-4">
               Explore
-            </h4>
+            </h2>
             <ul className="space-y-2.5">
               {quickLinks.map(link => (
                 <li key={link.href}>
@@ -53,9 +86,9 @@ export default function Footer() {
 
           {/* Get involved */}
           <div className="md:col-span-4">
-            <h4 className="text-white text-sm font-semibold tracking-wide uppercase mb-4">
+            <h2 className="text-white text-sm font-semibold tracking-wide uppercase mb-4">
               Get Involved
-            </h4>
+            </h2>
             <ul className="space-y-2.5">
               {involveLinks.map(link => (
                 <li key={link.href}>
@@ -73,7 +106,7 @@ export default function Footer() {
 
         <div className="mt-14 pt-8 border-t border-primary-800/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-primary-200/40">
-            &copy; {year} Utthan. All rights reserved.
+            &copy; {year} {siteConfig.legalName}. All rights reserved.
           </p>
         </div>
       </div>

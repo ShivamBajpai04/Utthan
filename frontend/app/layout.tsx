@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { DM_Serif_Display, Inter } from 'next/font/google';
 
+import JsonLd from '@/components/JsonLd';
 import { env } from '@/lib/env';
+import { absoluteUrl, defaultOgImage } from '@/lib/seo';
+import { FOUNDING_YEAR, siteConfig } from '@/lib/site';
 
 import './globals.css';
 
@@ -21,13 +24,23 @@ const dmSerif = DM_Serif_Display({
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {
-    default: 'Utthan — Empowering Communities, Transforming Lives',
-    template: '%s | Utthan',
+    default: `${siteConfig.legalName} — ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.legalName}`,
   },
-  description:
-    "A trusted Indian NGO working across women's safety, disability rehabilitation, community health, legal aid, and social justice for decades.",
-  keywords: ['NGO', 'India', 'social work', 'community development', 'Utthan'],
-  authors: [{ name: 'Utthan' }],
+  description: `${siteConfig.legalName} — ${siteConfig.description}`,
+  applicationName: siteConfig.legalName,
+  keywords: [
+    siteConfig.legalName,
+    'Utthan',
+    'Utthan NGO',
+    'NGO',
+    'India',
+    'social work',
+    'community development',
+  ],
+  authors: [{ name: siteConfig.legalName }],
+  creator: siteConfig.legalName,
+  publisher: siteConfig.legalName,
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '48x48' },
@@ -37,12 +50,33 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    siteName: 'Utthan',
+    siteName: siteConfig.legalName,
     locale: 'en_IN',
+    url: env.siteUrl,
+    title: `${siteConfig.legalName} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    images: [defaultOgImage],
   },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${siteConfig.legalName} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    images: [siteConfig.logo.src],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
@@ -56,9 +90,63 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Tells search engines the registered name, that "Utthan" is the same
+  // organisation, and which mark belongs to it — so the brand can surface as
+  // a knowledge panel rather than a bare link.
+  const organisationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NGO',
+    '@id': `${absoluteUrl()}/#organisation`,
+    name: siteConfig.legalName,
+    legalName: siteConfig.legalName,
+    alternateName: [siteConfig.name, `${siteConfig.name} NGO`],
+    description: siteConfig.description,
+    url: absoluteUrl(),
+    logo: {
+      '@type': 'ImageObject',
+      url: absoluteUrl(siteConfig.logo.src),
+      width: siteConfig.logo.width,
+      height: siteConfig.logo.height,
+    },
+    image: absoluteUrl(siteConfig.logo.src),
+    foundingDate: String(FOUNDING_YEAR),
+    areaServed: 'IN',
+    address: { '@type': 'PostalAddress', addressCountry: 'IN' },
+    ...(siteConfig.contact.email || siteConfig.contact.phone
+      ? {
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'general enquiries',
+            ...(siteConfig.contact.email && { email: siteConfig.contact.email }),
+            ...(siteConfig.contact.phone && { telephone: siteConfig.contact.phone }),
+            areaServed: 'IN',
+            availableLanguage: ['en', 'hi'],
+          },
+        }
+      : {}),
+  };
+
+  // Lets the brand name resolve to the site itself, separate from the
+  // organisation entity above.
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${absoluteUrl()}/#website`,
+    name: siteConfig.legalName,
+    alternateName: siteConfig.name,
+    url: absoluteUrl(),
+    description: siteConfig.description,
+    inLanguage: 'en-IN',
+    publisher: { '@id': `${absoluteUrl()}/#organisation` },
+  };
+
   return (
     <html lang="en" className={`${inter.variable} ${dmSerif.variable}`}>
-      <body>{children}</body>
+      <body>
+        <JsonLd data={organisationJsonLd} />
+        <JsonLd data={websiteJsonLd} />
+        {children}
+      </body>
     </html>
   );
 }

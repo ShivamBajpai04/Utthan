@@ -48,3 +48,9 @@ export type BlogPostListItem = {
 export type BlogPost = BlogPostListItem & {
   body?: PortableTextBlock[] | null;
 };
+
+export type SitemapEntry = {
+  slug: string;
+  publishedAt?: string | null;
+  _updatedAt?: string | null;
+};

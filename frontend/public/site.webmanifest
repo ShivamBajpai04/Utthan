@@ -1,6 +1,7 @@
 {
-  "name": "Utthan",
+  "name": "Utthan Institute of Development Studies",
   "short_name": "Utthan",
+  "description": "A trusted Indian NGO working across women's safety, disability rehabilitation, community health, legal aid, and social justice.",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png?v=20260425",
@@ -15,7 +16,8 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#15803d",
+  "background_color": "#fdfbf7",
+  "display": "standalone",
+  "start_url": "/"
 }

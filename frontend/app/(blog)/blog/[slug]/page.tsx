@@ -1,14 +1,17 @@
-import { PortableText } from '@portabletext/react';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import JsonLd from '@/components/JsonLd';
+import PortableTextBody from '@/components/PortableTextBody';
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { blogPostBySlugQuery, blogPostSlugsQuery } from '@/lib/sanity/queries';
+import { toPlainText } from '@/lib/sanity/types';
 import type { BlogPost } from '@/lib/sanity/types';
-
-import { portableTextComponents } from './portable-text';
+import { absoluteUrl, blogUrl, breadcrumbJsonLd, metaDescription } from '@/lib/seo';
+import { siteConfig } from '@/lib/site';
 
 type RouteParams = { slug: string };
 
@@ -32,15 +35,32 @@ export async function generateMetadata({
     tags: [`post:${slug}`],
   }).catch(() => null);
 
-  if (!post) return { title: 'Post not found' };
+  if (!post) return { title: 'Post not found', robots: { index: false, follow: false } };
+
+  const description = post.body
+    ? metaDescription(toPlainText(post.body))
+    : `A post from ${siteConfig.legalName}.`;
+  const url = blogUrl(`/${slug}`);
+  const images = post.cover ? [{ url: post.cover, alt: post.coverAlt ?? post.title }] : undefined;
 
   return {
     title: post.title,
+    description,
+    alternates: { canonical: url },
+    authors: post.author ? [{ name: post.author }] : undefined,
     openGraph: {
       type: 'article',
+      url,
       title: post.title,
+      description,
       publishedTime: post.publishedAt ?? undefined,
       authors: post.author ? [post.author] : undefined,
+      images,
+    },
+    twitter: {
+      card: post.cover ? 'summary_large_image' : 'summary',
+      title: post.title,
+      description,
       images: post.cover ? [post.cover] : undefined,
     },
   };
@@ -60,8 +80,46 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
+  const url = blogUrl(`/${slug}`);
+
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: post.title,
+    description: post.body ? metaDescription(toPlainText(post.body)) : undefined,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    datePublished: post.publishedAt ?? undefined,
+    dateModified: post.publishedAt ?? undefined,
+    image: post.cover ? [post.cover] : [absoluteUrl(siteConfig.logo.src)],
+    author: post.author
+      ? { '@type': 'Person', name: post.author }
+      : { '@type': 'Organization', name: siteConfig.legalName },
+    publisher: { '@id': `${absoluteUrl()}/#organisation` },
+    inLanguage: 'en-IN',
+  };
+
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: 'Home', url: absoluteUrl() },
+    { name: 'Blog', url: blogUrl() },
+    { name: post.title, url },
+  ]);
+
   return (
     <article>
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbs} />
+
+      <nav className="mb-8" aria-label="Breadcrumb">
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-1.5 text-sm text-warm-400 hover:text-warm-700 transition-colors"
+        >
+          <span aria-hidden="true">&larr;</span> All posts
+        </Link>
+      </nav>
+
       {post.cover && (
         <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-10">
           <Image
@@ -89,12 +147,16 @@ export default async function BlogPostPage({
       </div>
 
       {post.body ? (
-        <div className="prose prose-lg prose-stone max-w-none prose-headings:font-heading prose-a:text-primary-700 prose-a:no-underline hover:prose-a:underline">
-          <PortableText value={post.body} components={portableTextComponents} />
-        </div>
+        <PortableTextBody value={post.body} />
       ) : (
-        <p className="text-warm-400">Content will appear once published in the CMS.</p>
+        <p className="text-warm-400">This post has no content yet.</p>
       )}
+
+      <div className="mt-16 pt-8 border-t border-warm-200">
+        <Link href="/blog" className="btn-secondary">
+          Read more posts
+        </Link>
+      </div>
     </article>
   );
 }

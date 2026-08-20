@@ -1,26 +1,23 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/help', label: 'Get Involved' },
-] as const;
+import BrandLockup from '@/components/BrandLockup';
+import { navItems, siteConfig } from '@/lib/site';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
 
   const isHome = pathname === '/';
   const transparent = isHome && !scrolled;
+
+  const isCurrent = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -33,13 +30,28 @@ export default function Header() {
     setIsMenuOpen(false);
   }, [pathname]);
 
+  // Close the mobile menu on Escape or on a click outside it, and stop the
+  // page behind it from scrolling while it is open.
   useEffect(() => {
     if (!isMenuOpen) return;
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsMenuOpen(false);
     };
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!navRef.current?.contains(e.target as Node)) setIsMenuOpen(false);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    document.addEventListener('pointerdown', handlePointerDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKey);
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
   }, [isMenuOpen]);
 
   return (
@@ -50,41 +62,26 @@ export default function Header() {
           : 'bg-white/95 backdrop-blur-sm shadow-sm border-b border-warm-200/50 py-2'
       }`}
     >
-      <nav className="container-custom" aria-label="Main">
+      <nav className="container-custom" aria-label="Main" ref={navRef}>
         <div className="flex items-center justify-between h-14">
-          <Link href="/" className="flex items-center gap-3 group">
-            <Image
-              src="/images/utthan-logo.jpeg"
-              alt="Utthan logo"
-              width={54}
-              height={41}
-              className="rounded-md h-8 md:h-10 w-auto"
+          {/* The qualifier is part of the registered name, so it shows at
+              every breakpoint — not just on large screens. */}
+          <Link
+            href="/"
+            className="group shrink-0 rounded-md"
+            aria-label={`${siteConfig.legalName} — home`}
+          >
+            <BrandLockup
+              size="sm"
+              tone={transparent ? 'dark' : 'light'}
               priority
+              className="transition-opacity group-hover:opacity-80"
             />
-            <div className="flex flex-col">
-              <span
-                className={`font-heading text-xl md:text-2xl leading-none transition-colors ${
-                  transparent
-                    ? 'text-white group-hover:text-primary-200'
-                    : 'text-primary-800 group-hover:text-primary-900'
-                }`}
-              >
-                Utthan
-              </span>
-              <span
-                className={`hidden lg:inline text-[0.65rem] font-medium tracking-wide leading-tight mt-0.5 transition-colors ${
-                  transparent ? 'text-white/60' : 'text-warm-400'
-                }`}
-              >
-                Institute of Development Studies
-              </span>
-            </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
             {navItems.map(item => {
-              const isActive =
-                item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+              const isActive = isCurrent(item.href);
               return (
                 <Link
                   key={item.href}
@@ -141,16 +138,16 @@ export default function Header() {
         {isMenuOpen && (
           <div
             id="mobile-menu"
-            className="md:hidden absolute top-full left-0 w-full bg-white border-b border-warm-200 shadow-soft animate-fade-in"
+            className="md:hidden absolute top-full left-0 w-full bg-white border-b border-warm-200 shadow-soft animate-fade-in max-h-[calc(100vh-5rem)] overflow-y-auto"
           >
             <div className="container-custom py-4 flex flex-col gap-1">
               {navItems.map(item => {
-                const isActive =
-                  item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                const isActive = isCurrent(item.href);
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? 'page' : undefined}
                     className={`py-2.5 px-3 rounded-md text-[0.95rem] font-medium transition-colors ${
                       isActive
                         ? 'text-primary-800 bg-primary-50'

@@ -1,11 +1,8 @@
-const stats = [
-  { value: '50+', label: 'Years of Service' },
-  { value: '100K+', label: 'Lives Touched' },
-  { value: '25+', label: 'Active Programmes' },
-  { value: '15+', label: 'Centres & Locations' },
-];
+import { impactStats } from '@/lib/site';
 
 export default function ImpactSection() {
+  const stats = impactStats();
+
   return (
     <section className="section-padding bg-cream-dark relative overflow-hidden">
       <div className="absolute top-0 right-0 w-80 h-80 bg-primary-100/40 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />

@@ -5,11 +5,21 @@ import { sanityFetch } from '@/lib/sanity/fetch';
 import { projectsQuery } from '@/lib/sanity/queries';
 import { toPlainText } from '@/lib/sanity/types';
 import type { Project } from '@/lib/sanity/types';
+import { siteConfig } from '@/lib/site';
+
+const description =
+  'Explore the projects Utthan runs across India — spanning empowerment, rehabilitation, health, and social justice.';
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description:
-    'Explore the projects Utthan runs across India — spanning empowerment, rehabilitation, health, and social justice.',
+  description,
+  alternates: { canonical: '/projects' },
+  openGraph: {
+    type: 'website',
+    url: '/projects',
+    title: `Projects | ${siteConfig.legalName}`,
+    description,
+  },
 };
 
 export default async function ProjectsPage() {
@@ -32,9 +42,15 @@ export default async function ProjectsPage() {
 
         {projects.length === 0 ? (
           <div className="text-center py-16 bg-warm-50 rounded-2xl border-2 border-dashed border-warm-200">
-            <p className="text-warm-400">
-              Projects will be displayed here once added to the CMS.
+            <p className="text-warm-500 font-medium">
+              Our projects will be listed here soon.
             </p>
+            <p className="text-warm-400 text-sm mt-1 mb-6">
+              In the meantime, read about the work we do.
+            </p>
+            <Link href="/about" className="btn-secondary">
+              About Utthan
+            </Link>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -55,8 +71,8 @@ export default async function ProjectsPage() {
                     {toPlainText(project.description)}
                   </p>
                   <span className="inline-flex items-center text-primary-700 text-sm font-medium group-hover:gap-2 gap-1 transition-all">
-                    View gallery
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    View project
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                   </span>

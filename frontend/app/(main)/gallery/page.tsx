@@ -139,7 +139,7 @@ export default async function GalleryPage({
                 <p className="text-warm-500 font-medium text-lg">
                   No photos for this project yet
                 </p>
-                <p className="text-warm-400 mt-1 mb-6 text-sm">
+                <p className="text-warm-500 mt-1 mb-6 text-sm">
                   Photos from this project will be shared soon.
                 </p>
                 <Link href="/gallery" className="btn-secondary">
@@ -149,7 +149,7 @@ export default async function GalleryPage({
             ) : (
               <>
                 <p className="text-warm-500 font-medium text-lg">Coming soon</p>
-                <p className="text-warm-400 mt-1 text-sm">
+                <p className="text-warm-500 mt-1 text-sm">
                   Photos from our work will be shared shortly.
                 </p>
               </>

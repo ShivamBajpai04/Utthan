@@ -27,7 +27,7 @@ export default function NotFoundContent() {
           Browse our projects
         </Link>
       </div>
-      <p className="text-sm text-warm-400 mt-8">
+      <p className="text-sm text-warm-500 mt-8">
         Looking for something specific?{' '}
         <Link
           href="/help#contact"

@@ -34,7 +34,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           </Link>
           <Link
             href={mainSiteHref('/')}
-            className="text-sm font-medium text-warm-400 hover:text-warm-700 transition-colors shrink-0"
+            className="text-sm font-medium text-warm-500 hover:text-warm-700 transition-colors shrink-0"
           >
             &larr; Main site
           </Link>
@@ -44,7 +44,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <footer className="border-t border-warm-200 mt-16">
-        <div className="mx-auto max-w-3xl px-5 py-8 text-center text-xs text-warm-400">
+        <div className="mx-auto max-w-3xl px-5 py-8 text-center text-xs text-warm-500">
           &copy; {new Date().getFullYear()} {siteConfig.legalName}
         </div>
       </footer>

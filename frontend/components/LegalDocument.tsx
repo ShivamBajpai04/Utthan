@@ -26,7 +26,7 @@ export default function LegalDocument({
     <div className="pt-32 pb-20">
       <div className="container-narrow">
         <h1 className="heading-1 mb-4">{title}</h1>
-        <p className="text-sm text-warm-400 mb-8">Last updated: {updated}</p>
+        <p className="text-sm text-warm-500 mb-8">Last updated: {updated}</p>
 
         {notice && (
           <p className="mb-10 text-sm text-warm-700 bg-warm-50 border border-warm-200 rounded-lg px-5 py-4">

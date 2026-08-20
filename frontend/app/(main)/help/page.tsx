@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
+import GivingDetails from '@/components/GivingDetails';
 import {
   centres,
   contactDetailsConfirmed,
@@ -28,8 +28,11 @@ const ways = [
   {
     id: 'donate',
     title: 'Donate',
+    // No tax-deduction claim here until an 80G registration number exists to
+    // back it — add the number to `giving.registrations` in lib/site.ts and it
+    // renders below, which is a claim a donor can actually verify.
     description:
-      'Your financial support helps us sustain and grow our programmes. Donations fund women’s empowerment, disability rehabilitation, community health, and legal aid services across India. All donations are eligible for tax deductions as per applicable laws.',
+      'Your financial support helps us sustain and grow our programmes. Donations fund women’s empowerment, disability rehabilitation, community health, and legal aid services across India.',
     subject: 'I would like to donate to Utthan',
     cta: 'Enquire about donating',
     icon: (
@@ -97,22 +100,36 @@ export default function HelpPage() {
                 <div className="w-12 h-12 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center shrink-0">
                   {way.icon}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="font-heading text-2xl text-warm-900 mb-3">{way.title}</h2>
                   <p className="body-lg mb-5">{way.description}</p>
-                  {/* Each action opens a pre-addressed email once a real
-                      address is confirmed; until then it points at contact. */}
+
+                  {/* Donating is the one action that needs its own details
+                      rather than an enquiry, so it carries them inline. */}
+                  {way.id === 'donate' && <GivingDetails />}
+
+                  {/* Every action opens a pre-addressed email once a real
+                      address is confirmed. Until then there is no channel to
+                      offer, so nothing pretends to be one: a button that
+                      only scrolls to a placeholder phone number reads as a
+                      broken site, which is worse than an honest gap. */}
                   {live ? (
                     <a
                       href={`mailto:${email}?subject=${encodeURIComponent(way.subject)}`}
-                      className="btn-secondary text-sm px-5 py-2.5"
+                      className={`btn-secondary text-sm px-5 py-2.5${
+                        way.id === 'donate' ? ' mt-8' : ''
+                      }`}
                     >
                       {way.cta}
                     </a>
                   ) : (
-                    <Link href="#contact" className="btn-secondary text-sm px-5 py-2.5">
-                      {way.cta}
-                    </Link>
+                    way.id !== 'donate' && (
+                      <p className="text-[0.95rem] leading-relaxed text-warm-700 bg-warm-50 border border-warm-200 rounded-lg px-4 py-3.5">
+                        We are confirming the email address for{' '}
+                        {way.title.toLowerCase()} enquiries. It will appear here
+                        as soon as it is live.
+                      </p>
+                    )
                   )}
                 </div>
               </div>
@@ -139,10 +156,12 @@ export default function HelpPage() {
           )}
 
           <address className="not-italic space-y-3 text-warm-700 text-[0.95rem]">
-            <p>
-              <span className="font-semibold">Address:</span>{' '}
-              <span className="text-warm-600">{address}</span>
-            </p>
+            {address && (
+              <p>
+                <span className="font-semibold">Address:</span>{' '}
+                <span className="text-warm-600">{address}</span>
+              </p>
+            )}
             <p>
               <span className="font-semibold">Phone:</span>{' '}
               {live ? (
@@ -172,6 +191,10 @@ export default function HelpPage() {
           </address>
         </section>
 
+        {/* Hidden entirely while no centre addresses are confirmed — a "Visit
+            us" heading over an empty grid invites the visitor to look for
+            something that is not there. */}
+        {centres.length > 0 && (
         <section id="visit" className="mt-8 scroll-mt-28">
           <h2 className="font-heading text-2xl text-warm-900 mb-3">Visit us</h2>
           <p className="body-lg mb-6 max-w-2xl">
@@ -203,6 +226,7 @@ export default function HelpPage() {
             ))}
           </div>
         </section>
+        )}
       </div>
     </div>
   );

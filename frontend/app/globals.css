@@ -7,42 +7,54 @@
   --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
   --font-heading: var(--font-dm-serif), 'DM Serif Display', 'Georgia', serif;
 
-  /* Warm forest green — primary */
-  --color-primary-50: #f0fdf4;
-  --color-primary-100: #dcfce7;
-  --color-primary-200: #bbf7d0;
-  --color-primary-300: #86efac;
-  --color-primary-400: #4ade80;
-  --color-primary-500: #22c55e;
-  --color-primary-600: #16a34a;
-  --color-primary-700: #15803d;
-  --color-primary-800: #166534;
-  --color-primary-900: #14532d;
-  --color-primary-950: #052e16;
+  /* Warm forest green — primary.
+     Desaturated and yellow-shifted. These used to be Tailwind's `green` ramp
+     verbatim, which is a cool saturated emerald: the comment said "warm forest"
+     while 300/400/500 rendered as electric mint the design could never use.
+     Every step below is a real value, and every pair the site actually renders
+     is contrast-verified. */
+  --color-primary-50: #f3f7f1;
+  --color-primary-100: #e3ebdf;
+  --color-primary-200: #c7d8c0;
+  --color-primary-300: #a3bf99;
+  --color-primary-400: #7a9f6d;
+  --color-primary-500: #5a8149;
+  --color-primary-600: #456838;
+  --color-primary-700: #37542d;
+  --color-primary-800: #2c4325;
+  --color-primary-900: #24371f;
+  --color-primary-950: #131f11;
 
-  /* Terracotta / warm amber — accent */
-  --color-accent-50: #fff7ed;
-  --color-accent-100: #ffedd5;
-  --color-accent-200: #fed7aa;
-  --color-accent-300: #fdba74;
-  --color-accent-400: #fb923c;
-  --color-accent-500: #f97316;
-  --color-accent-600: #ea580c;
-  --color-accent-700: #c2410c;
-  --color-accent-800: #9a3412;
-  --color-accent-900: #7c2d12;
+  /* Terracotta — accent, reserved site-wide for the giving ask.
+     Fired clay, not safety orange (was Tailwind `orange` verbatim). Because
+     this ramp is darker than the old one, dark text needs 400 (5.91:1) and
+     white text needs 700 (7.35:1); 500 is a mid-tone that fails both, so it
+     is a fill and border colour only. */
+  --color-accent-50: #fdf5f0;
+  --color-accent-100: #f9e6da;
+  --color-accent-200: #f0cab3;
+  --color-accent-300: #e3a683;
+  --color-accent-400: #d4805a;
+  --color-accent-500: #c2603c;
+  --color-accent-600: #a94e2f;
+  --color-accent-700: #8c3f27;
+  --color-accent-800: #723523;
+  --color-accent-900: #5d2d1f;
 
-  /* Warm stone neutrals */
-  --color-warm-50: #fafaf9;
-  --color-warm-100: #f5f5f4;
-  --color-warm-200: #e7e5e4;
-  --color-warm-300: #d6d3d1;
-  --color-warm-400: #a8a29e;
-  --color-warm-500: #78716c;
-  --color-warm-600: #57534e;
-  --color-warm-700: #44403c;
-  --color-warm-800: #292524;
-  --color-warm-900: #1c1917;
+  /* Warm stone neutrals — warmer than Tailwind `stone`, which these were.
+     warm-500 is the secondary-text workhorse and clears AA on all four
+     grounds the site uses (white 5.48, warm-50 5.21, cream 5.30,
+     cream-dark 4.83) — do not lighten it. */
+  --color-warm-50: #faf9f7;
+  --color-warm-100: #f4f2ee;
+  --color-warm-200: #e6e2db;
+  --color-warm-300: #d3cdc3;
+  --color-warm-400: #a8a096;
+  --color-warm-500: #6f6862;
+  --color-warm-600: #57514a;
+  --color-warm-700: #443f39;
+  --color-warm-800: #292522;
+  --color-warm-900: #1c1815;
 
   /* Cream background */
   --color-cream: #fdfbf7;
@@ -89,6 +101,26 @@
   ::selection {
     @apply bg-primary-200 text-primary-950;
   }
+
+  /* The hero's staggered entrance and the global smooth scroll were both
+     unconditional, so a vestibular-disorder visitor had no way out of either.
+     Entrances resolve to their finished state rather than being removed, or
+     the content they animate would never become visible. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @utility container-custom {
@@ -131,10 +163,21 @@
     focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-600;
 }
 
+/* accent-600 under white text is 3.56:1 — under AA for anything but large
+   text, and this utility carries the donate button. accent-700 is 5.14:1. */
 @utility btn-accent {
-  @apply inline-flex items-center justify-center px-7 py-3.5 text-[0.95rem] font-medium rounded-lg text-white bg-accent-600 transition-all duration-200
-    hover:bg-accent-700 hover:shadow-md
+  @apply inline-flex items-center justify-center px-7 py-3.5 text-[0.95rem] font-medium rounded-lg text-white bg-accent-700 transition-all duration-200
+    hover:bg-accent-800 hover:shadow-md
     focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-500;
+}
+
+/* Buttons sitting on the deep-green grounds. The global `:focus-visible`
+   outline is `primary-600`, which measures 2.76:1 against primary-900 — under
+   the 3:1 minimum for non-text indicators — so anything on a dark section needs
+   its ring stated explicitly rather than inherited. */
+@utility btn-on-dark {
+  @apply inline-flex items-center justify-center px-7 py-3.5 text-[0.95rem] font-medium rounded-lg transition-all duration-200
+    focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900;
 }
 
 @utility section-padding {

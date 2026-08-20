@@ -4,37 +4,34 @@ export default function ImpactSection() {
   const stats = impactStats();
 
   return (
-    <section className="section-padding bg-cream-dark relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-80 h-80 bg-primary-100/40 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-100/30 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl" />
-
+    <section className="section-padding bg-primary-950 text-white relative overflow-hidden">
       <div className="container-custom relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="chip bg-primary-100 text-primary-800 mb-5">Our impact</p>
-          <h2 className="heading-2 mb-4">
-            Decades of meaningful change
-          </h2>
-          <p className="body-lg">
-            The numbers tell a story of persistence, compassion, and communities
-            lifting themselves toward a better future.
-          </p>
-        </div>
+        {/* The heading used to read "Decades of meaningful change", which
+            restated AboutPreview's "Over three decades of grassroots social
+            work" 800px above it, and the paragraph beneath told the visitor
+            what to feel about numbers they had not read yet. Both cut. */}
+        <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl leading-tight mb-14 max-w-2xl">
+          What the work adds up to
+        </h2>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Four white tiles, each a big number over a small label, is the
+            hero-metric scaffold — and it put the organisation's most credible
+            assets in the same container as everything else on the page. A
+            ruled band of figures on the dark ground gives them the weight they
+            earn without another row of boxes, and `dl` gives a screen reader
+            the value/label pairing that four divs did not. */}
+        <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 divide-y divide-white/15 lg:divide-y-0 lg:divide-x">
           {stats.map(stat => (
-            <div
-              key={stat.label}
-              className="text-center p-8 rounded-xl bg-white border border-warm-200/60 shadow-card"
-            >
-              <div className="font-heading text-4xl md:text-5xl text-primary-800 mb-2">
+            <div key={stat.label} className="py-8 lg:py-0 lg:px-8 lg:first:pl-0">
+              <dt className="font-heading text-5xl lg:text-6xl leading-none mb-3">
                 {stat.value}
-              </div>
-              <div className="text-warm-500 text-sm font-medium">
+              </dt>
+              <dd className="text-primary-200/80 text-[0.95rem] leading-snug">
                 {stat.label}
-              </div>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

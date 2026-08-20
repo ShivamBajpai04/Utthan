@@ -49,6 +49,20 @@ export const galleryPhotosQuery = defineQuery(`
   }
 `);
 
+/** Single most recent gallery photo, for the home hero backdrop. */
+export const heroPhotoQuery = defineQuery(`
+  *[_type == "galleryPhoto" && ${notDraft} && defined(image.asset)]
+    | order(order asc, _createdAt desc)[0] {
+    _id,
+    "url": image.asset->url,
+    description,
+    alt,
+    "projectSlug": project->slug.current,
+    "projectName": project->name,
+    order
+  }
+`);
+
 export const galleryPhotosByProjectQuery = defineQuery(`
   *[_type == "galleryPhoto" && project->slug.current == $projectSlug && ${notDraft}] | order(order asc, _createdAt desc) {
     _id,

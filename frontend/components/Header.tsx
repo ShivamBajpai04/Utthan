@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import BrandLockup from '@/components/BrandLockup';
 import { resolveNavHref } from '@/lib/seo';
-import { navItems, siteConfig } from '@/lib/site';
+import { donateCta, navItems, siteConfig } from '@/lib/site';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -103,14 +103,17 @@ export default function Header() {
               );
             })}
             <Link
-              href="/help#donate"
+              href={donateCta.href}
               className={`text-sm ml-3 px-5 py-2.5 inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 ${
                 transparent
-                  ? 'bg-white text-primary-900 hover:bg-warm-100'
+                  ? // Dark text on terracotta: white on accent-500 is only
+                    // 2.8:1. Accent is reserved for the giving ask, so this
+                    // never collides with the hero's own white button.
+                    'bg-accent-400 text-warm-900 hover:bg-accent-300'
                   : 'btn-primary'
               }`}
             >
-              Donate
+              {donateCta.shortLabel}
             </Link>
           </div>
 
@@ -159,8 +162,11 @@ export default function Header() {
                   </Link>
                 );
               })}
-              <Link href="/help#donate" className="btn-primary w-full text-center mt-3">
-                Donate
+              <Link
+                href={donateCta.href}
+                className="btn-primary w-full text-center mt-3"
+              >
+                {donateCta.shortLabel}
               </Link>
             </div>
           </div>

@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import AboutPreview from '@/components/AboutPreview';
 import CallToAction from '@/components/CallToAction';
 import ExploreMore from '@/components/ExploreMore';
+import ExploreMoreSkeleton from '@/components/ExploreMoreSkeleton';
 import Hero from '@/components/Hero';
 import ImpactSection from '@/components/ImpactSection';
-import ProjectsOverview from '@/components/ProjectsOverview';
+import ProjectsOverview, {
+  ProjectsOverviewSkeleton,
+} from '@/components/ProjectsOverview';
 import { siteConfig, yearsOfService } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -29,9 +33,17 @@ export default function Home() {
     <div>
       <Hero />
       <AboutPreview />
-      <ProjectsOverview />
+      {/* The only part of this page that waits on the CMS. Its own boundary
+          keeps the hero and everything below from waiting with it. */}
+      <Suspense fallback={<ProjectsOverviewSkeleton />}>
+        <ProjectsOverview />
+      </Suspense>
       <ImpactSection />
-      <ExploreMore />
+      {/* Also CMS-backed (it pulls a real photograph), so it gets its own
+          boundary rather than holding up the closing call to action. */}
+      <Suspense fallback={<ExploreMoreSkeleton />}>
+        <ExploreMore />
+      </Suspense>
       <CallToAction />
     </div>
   );

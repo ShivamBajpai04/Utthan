@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import ValueIcon from '@/components/ValueIcon';
 import { decadesOfService, values } from '@/lib/site';
 
 export default function AboutPreview() {
@@ -10,7 +9,6 @@ export default function AboutPreview() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           {/* Left — narrative */}
           <div>
-            <p className="chip bg-primary-50 text-primary-700 mb-5">Who we are</p>
             <h2 className="heading-2 mb-6">
               Over {decadesOfService()} of grassroots social work across India
             </h2>
@@ -32,24 +30,26 @@ export default function AboutPreview() {
           </div>
 
           {/* Right — the values, shared with the About page so the two can
-              never list a different set. */}
-          <ul className="space-y-4">
+              never list a different set.
+
+              These were five cards with stock icon tiles: five same-size boxes
+              of icon + heading + text, which is the page-scaffold pattern the
+              rest of this homepage was already overusing, and the icons were
+              unmodified library glyphs that said nothing about this work — the
+              one for "Long-term Impact" was a clock. A list is what this is,
+              so it is now a list, and the type carries it. */}
+          <dl className="divide-y divide-warm-200 border-t border-warm-200">
             {values.map(value => (
-              <li key={value.id} className="card card-hover p-5 flex gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center shrink-0">
-                  <ValueIcon id={value.id} />
-                </div>
-                <div>
-                  <h3 className="font-heading text-lg text-warm-900 mb-1">
-                    {value.title}
-                  </h3>
-                  <p className="text-warm-500 text-sm leading-relaxed">
-                    {value.description}
-                  </p>
-                </div>
-              </li>
+              <div key={value.id} className="py-5 first:pt-6">
+                <dt className="font-heading text-lg text-warm-900 mb-1">
+                  {value.title}
+                </dt>
+                <dd className="text-warm-500 text-[0.95rem] leading-relaxed">
+                  {value.description}
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </div>
       </div>
     </section>

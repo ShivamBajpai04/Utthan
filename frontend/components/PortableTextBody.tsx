@@ -28,7 +28,7 @@ const components: Partial<PortableTextReactComponents> = {
             className="rounded-lg w-full h-auto"
           />
           {value.caption && (
-            <figcaption className="text-center text-sm text-warm-400 mt-3">
+            <figcaption className="text-center text-sm text-warm-500 mt-3">
               {value.caption}
             </figcaption>
           )}
@@ -102,7 +102,7 @@ const components: Partial<PortableTextReactComponents> = {
       </ul>
     ),
     number: ({ children }: { children?: React.ReactNode }) => (
-      <ol className="list-decimal pl-6 mb-5 space-y-2 text-warm-600 marker:text-warm-400">
+      <ol className="list-decimal pl-6 mb-5 space-y-2 text-warm-600 marker:text-warm-500">
         {children}
       </ol>
     ),

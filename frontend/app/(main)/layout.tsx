@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import StickyDonateBar from '@/components/StickyDonateBar';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,6 +16,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {children}
       </main>
       <Footer />
+      <StickyDonateBar />
+      {/* Reserves the space the fixed bar occupies so it never covers the
+          end of the footer on mobile. */}
+      <div className="h-16 md:hidden" aria-hidden="true" />
     </>
   );
 }

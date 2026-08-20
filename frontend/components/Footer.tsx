@@ -1,7 +1,13 @@
 import Link from 'next/link';
 
 import BrandLockup from '@/components/BrandLockup';
-import { decadesOfService, siteConfig } from '@/lib/site';
+import { resolveNavHref } from '@/lib/seo';
+import {
+  contactDetailsConfirmed,
+  decadesOfService,
+  siteConfig,
+  telHref,
+} from '@/lib/site';
 
 const quickLinks = [
   { href: '/about', label: 'About' },
@@ -18,10 +24,15 @@ const involveLinks = [
   { href: '/help#contact', label: 'Contact' },
 ];
 
+const legalLinks = [
+  { href: '/privacy', label: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms of Use' },
+];
+
 export default function Footer() {
   const year = new Date().getFullYear();
   const { address, phone, email } = siteConfig.contact;
-  const hasContact = Boolean(address || phone || email);
+  const live = contactDetailsConfirmed;
 
   return (
     <footer className="bg-primary-950 text-primary-200/70">
@@ -38,31 +49,28 @@ export default function Footer() {
               spanning over {decadesOfService()}.
             </p>
 
-            {hasContact && (
-              <address className="not-italic text-sm mt-6 space-y-1.5">
-                {address && <p className="max-w-xs">{address}</p>}
-                {phone && (
-                  <p>
-                    <a
-                      href={`tel:${phone.replace(/[^+\d]/g, '')}`}
-                      className="hover:text-white transition-colors"
-                    >
-                      {phone}
-                    </a>
-                  </p>
+            {/* Placeholder details stay unlinked until confirmed. */}
+            <address className="not-italic text-sm mt-6 space-y-1.5">
+              <p className="max-w-xs">{address}</p>
+              <p>
+                {live ? (
+                  <a href={telHref(phone)} className="hover:text-white transition-colors">
+                    {phone}
+                  </a>
+                ) : (
+                  phone
                 )}
-                {email && (
-                  <p>
-                    <a
-                      href={`mailto:${email}`}
-                      className="hover:text-white transition-colors"
-                    >
-                      {email}
-                    </a>
-                  </p>
+              </p>
+              <p>
+                {live ? (
+                  <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                    {email}
+                  </a>
+                ) : (
+                  email
                 )}
-              </address>
-            )}
+              </p>
+            </address>
           </div>
 
           {/* Quick links */}
@@ -74,7 +82,7 @@ export default function Footer() {
               {quickLinks.map(link => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    href={resolveNavHref(link.href)}
                     className="text-sm hover:text-white transition-colors"
                   >
                     {link.label}
@@ -108,6 +116,18 @@ export default function Footer() {
           <p className="text-xs text-primary-200/40">
             &copy; {year} {siteConfig.legalName}. All rights reserved.
           </p>
+          <ul className="flex items-center gap-5">
+            {legalLinks.map(link => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-xs text-primary-200/50 hover:text-white transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import BrandLockup from '@/components/BrandLockup';
+import { blogHref, mainSiteHref } from '@/lib/seo';
 import { siteConfig } from '@/lib/site';
 
 // Canonicals are set per page (index and post) so a post never inherits the
@@ -22,7 +23,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           {/* The blog is a separate surface, so it carries the full identity
               rather than a bare "Utthan Blog" wordmark. */}
           <Link
-            href="/blog"
+            href={blogHref('/')}
             className="group min-w-0"
             aria-label={`${siteConfig.legalName} blog — all posts`}
           >
@@ -32,7 +33,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             />
           </Link>
           <Link
-            href="/"
+            href={mainSiteHref('/')}
             className="text-sm font-medium text-warm-400 hover:text-warm-700 transition-colors shrink-0"
           >
             &larr; Main site

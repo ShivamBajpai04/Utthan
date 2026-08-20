@@ -7,7 +7,7 @@ import JsonLd from '@/components/JsonLd';
 import { sanityFetch } from '@/lib/sanity/fetch';
 import { blogPostsQuery } from '@/lib/sanity/queries';
 import type { BlogPostListItem } from '@/lib/sanity/types';
-import { absoluteUrl, blogUrl } from '@/lib/seo';
+import { absoluteUrl, blogHref, blogUrl } from '@/lib/seo';
 import { siteConfig } from '@/lib/site';
 
 const description = `Stories, updates, and insights from ${siteConfig.legalName}'s work across India.`;
@@ -76,7 +76,7 @@ export default async function BlogIndexPage() {
       <div className="space-y-14">
         {posts.map(post => (
           <article key={post._id} className="group">
-            <Link href={`/blog/${post.slug.current}`} className="block">
+            <Link href={blogHref(`/${post.slug.current}`)} className="block">
               {post.cover && (
                 <div className="relative aspect-[2/1] rounded-xl overflow-hidden mb-5">
                   <Image

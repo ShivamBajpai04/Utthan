@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import AboutPreview from '@/components/AboutPreview';
 import CallToAction from '@/components/CallToAction';
+import ExploreMore from '@/components/ExploreMore';
 import Hero from '@/components/Hero';
 import ImpactSection from '@/components/ImpactSection';
 import ProjectsOverview from '@/components/ProjectsOverview';
@@ -30,6 +31,7 @@ export default function Home() {
       <AboutPreview />
       <ProjectsOverview />
       <ImpactSection />
+      <ExploreMore />
       <CallToAction />
     </div>
   );

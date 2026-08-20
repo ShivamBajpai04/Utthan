@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import BrandLockup from '@/components/BrandLockup';
+import { resolveNavHref } from '@/lib/seo';
 import { navItems, siteConfig } from '@/lib/site';
 
 export default function Header() {
@@ -85,7 +86,7 @@ export default function Header() {
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={resolveNavHref(item.href)}
                   aria-current={isActive ? 'page' : undefined}
                   className={`px-3.5 py-2 rounded-md text-[0.9rem] font-medium transition-colors ${
                     transparent
@@ -146,7 +147,7 @@ export default function Header() {
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={resolveNavHref(item.href)}
                     aria-current={isActive ? 'page' : undefined}
                     className={`py-2.5 px-3 rounded-md text-[0.95rem] font-medium transition-colors ${
                       isActive

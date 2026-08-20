@@ -17,6 +17,40 @@ export function blogUrl(path = ''): string {
   return `${base}${suffix}`;
 }
 
+/** True when the blog is served from its own host, e.g. blog.example.org. */
+export const blogOnSubdomain = Boolean(env.blogUrl);
+
+/**
+ * Href for a page within the blog. On the blog subdomain the `/blog` prefix is
+ * dropped so links match the canonical URLs; on a shared domain it is kept.
+ */
+export function blogHref(path = ''): string {
+  const suffix = path && !path.startsWith('/') ? `/${path}` : path;
+  if (blogOnSubdomain) return suffix || '/';
+  return `/blog${suffix}`;
+}
+
+/**
+ * Href back to the main site from a blog page. Must be absolute when the blog
+ * is on its own host, where a bare `/` would land on the blog index.
+ */
+export function mainSiteHref(path = '/'): string {
+  return blogOnSubdomain ? absoluteUrl(path) : path;
+}
+
+/** Href to the blog from a main-site page. Crosses hosts when it needs to. */
+export function blogLink(path = ''): string {
+  return blogOnSubdomain ? blogUrl(path) : `/blog${path}`;
+}
+
+/**
+ * Resolves a main-site nav href, sending `/blog` to the blog host once the
+ * blog has been split out so navigation and canonicals agree.
+ */
+export function resolveNavHref(href: string): string {
+  return href === '/blog' ? blogLink() : href;
+}
+
 export const defaultOgImage = {
   url: siteConfig.logo.src,
   width: siteConfig.logo.width,

@@ -4,7 +4,7 @@ import { DM_Serif_Display, Inter } from 'next/font/google';
 import JsonLd from '@/components/JsonLd';
 import { env } from '@/lib/env';
 import { absoluteUrl, defaultOgImage } from '@/lib/seo';
-import { FOUNDING_YEAR, siteConfig } from '@/lib/site';
+import { contactDetailsConfirmed, FOUNDING_YEAR, siteConfig } from '@/lib/site';
 
 import './globals.css';
 
@@ -111,19 +111,25 @@ export default function RootLayout({
     image: absoluteUrl(siteConfig.logo.src),
     foundingDate: String(FOUNDING_YEAR),
     areaServed: 'IN',
-    address: { '@type': 'PostalAddress', addressCountry: 'IN' },
-    ...(siteConfig.contact.email || siteConfig.contact.phone
+    // Only publish real details. Placeholder contact data is withheld so
+    // search engines never cache an address or number that does not work.
+    ...(contactDetailsConfirmed
       ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: siteConfig.contact.address,
+            addressCountry: 'IN',
+          },
           contactPoint: {
             '@type': 'ContactPoint',
             contactType: 'general enquiries',
-            ...(siteConfig.contact.email && { email: siteConfig.contact.email }),
-            ...(siteConfig.contact.phone && { telephone: siteConfig.contact.phone }),
+            email: siteConfig.contact.email,
+            telephone: siteConfig.contact.phone,
             areaServed: 'IN',
             availableLanguage: ['en', 'hi'],
           },
         }
-      : {}),
+      : { address: { '@type': 'PostalAddress', addressCountry: 'IN' } }),
   };
 
   // Lets the brand name resolve to the site itself, separate from the

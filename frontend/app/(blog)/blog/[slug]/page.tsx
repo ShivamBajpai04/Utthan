@@ -10,7 +10,14 @@ import { sanityFetch } from '@/lib/sanity/fetch';
 import { blogPostBySlugQuery, blogPostSlugsQuery } from '@/lib/sanity/queries';
 import { toPlainText } from '@/lib/sanity/types';
 import type { BlogPost } from '@/lib/sanity/types';
-import { absoluteUrl, blogUrl, breadcrumbJsonLd, metaDescription } from '@/lib/seo';
+import {
+  absoluteUrl,
+  blogHref,
+  blogUrl,
+  breadcrumbJsonLd,
+  mainSiteHref,
+  metaDescription,
+} from '@/lib/seo';
 import { siteConfig } from '@/lib/site';
 
 type RouteParams = { slug: string };
@@ -111,13 +118,24 @@ export default async function BlogPostPage({
       <JsonLd data={articleJsonLd} />
       <JsonLd data={breadcrumbs} />
 
-      <nav className="mb-8" aria-label="Breadcrumb">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-1.5 text-sm text-warm-400 hover:text-warm-700 transition-colors"
-        >
-          <span aria-hidden="true">&larr;</span> All posts
-        </Link>
+      <nav className="mb-8 text-sm text-warm-400" aria-label="Breadcrumb">
+        <ol className="flex flex-wrap items-center gap-x-2">
+          <li>
+            <Link href={mainSiteHref('/')} className="hover:text-warm-700 transition-colors">
+              Home
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <Link href={blogHref('/')} className="hover:text-warm-700 transition-colors">
+              Blog
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li className="text-warm-700 min-w-0 truncate" aria-current="page">
+            {post.title}
+          </li>
+        </ol>
       </nav>
 
       {post.cover && (
@@ -153,7 +171,7 @@ export default async function BlogPostPage({
       )}
 
       <div className="mt-16 pt-8 border-t border-warm-200">
-        <Link href="/blog" className="btn-secondary">
+        <Link href={blogHref('/')} className="btn-secondary">
           Read more posts
         </Link>
       </div>

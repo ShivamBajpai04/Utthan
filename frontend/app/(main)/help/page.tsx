@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { siteConfig } from '@/lib/site';
+import {
+  centres,
+  contactDetailsConfirmed,
+  mapsDirectionsUrl,
+  siteConfig,
+  telHref,
+} from '@/lib/site';
 
 const description =
   'Donate, volunteer, or collaborate with Utthan — every contribution helps us continue our mission of empowering communities across India.';
@@ -62,7 +68,9 @@ const ways = [
 
 export default function HelpPage() {
   const { address, phone, email } = siteConfig.contact;
-  const hasContact = Boolean(address || phone || email);
+  // Placeholders render so the layout can be reviewed, but stay inert: no
+  // mailto/tel/maps links that would send people to the wrong place.
+  const live = contactDetailsConfirmed;
 
   return (
     <div className="pt-32 pb-20">
@@ -92,9 +100,9 @@ export default function HelpPage() {
                 <div>
                   <h2 className="font-heading text-2xl text-warm-900 mb-3">{way.title}</h2>
                   <p className="body-lg mb-5">{way.description}</p>
-                  {/* Each action opens a pre-addressed email when one is
-                      configured; otherwise it points at the contact details. */}
-                  {email ? (
+                  {/* Each action opens a pre-addressed email once a real
+                      address is confirmed; until then it points at contact. */}
+                  {live ? (
                     <a
                       href={`mailto:${email}?subject=${encodeURIComponent(way.subject)}`}
                       className="btn-secondary text-sm px-5 py-2.5"
@@ -123,42 +131,77 @@ export default function HelpPage() {
             possible.
           </p>
 
-          {hasContact ? (
-            <address className="not-italic space-y-3 text-warm-700 text-[0.95rem]">
-              {address && (
-                <p>
-                  <span className="font-semibold">Address:</span>{' '}
-                  <span className="text-warm-600">{address}</span>
-                </p>
-              )}
-              {phone && (
-                <p>
-                  <span className="font-semibold">Phone:</span>{' '}
-                  <a
-                    href={`tel:${phone.replace(/[^+\d]/g, '')}`}
-                    className="text-primary-700 underline underline-offset-2 hover:text-primary-800"
-                  >
-                    {phone}
-                  </a>
-                </p>
-              )}
-              {email && (
-                <p>
-                  <span className="font-semibold">Email:</span>{' '}
-                  <a
-                    href={`mailto:${email}`}
-                    className="text-primary-700 underline underline-offset-2 hover:text-primary-800"
-                  >
-                    {email}
-                  </a>
-                </p>
-              )}
-            </address>
-          ) : (
-            <p className="text-warm-600 text-[0.95rem]">
-              Our contact details will be published here shortly.
+          {!live && (
+            <p className="mb-6 text-sm text-warm-600 bg-white/70 border border-primary-200/60 rounded-lg px-4 py-3">
+              The details below are placeholders while we confirm them, so they
+              are not yet clickable.
             </p>
           )}
+
+          <address className="not-italic space-y-3 text-warm-700 text-[0.95rem]">
+            <p>
+              <span className="font-semibold">Address:</span>{' '}
+              <span className="text-warm-600">{address}</span>
+            </p>
+            <p>
+              <span className="font-semibold">Phone:</span>{' '}
+              {live ? (
+                <a
+                  href={telHref(phone)}
+                  className="text-primary-700 underline underline-offset-2 hover:text-primary-800"
+                >
+                  {phone}
+                </a>
+              ) : (
+                <span className="text-warm-600">{phone}</span>
+              )}
+            </p>
+            <p>
+              <span className="font-semibold">Email:</span>{' '}
+              {live ? (
+                <a
+                  href={`mailto:${email}`}
+                  className="text-primary-700 underline underline-offset-2 hover:text-primary-800"
+                >
+                  {email}
+                </a>
+              ) : (
+                <span className="text-warm-600">{email}</span>
+              )}
+            </p>
+          </address>
+        </section>
+
+        <section id="visit" className="mt-8 scroll-mt-28">
+          <h2 className="font-heading text-2xl text-warm-900 mb-3">Visit us</h2>
+          <p className="body-lg mb-6 max-w-2xl">
+            Our centres are open to the communities we serve. If you are
+            planning to visit, please call ahead so someone can receive you.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {centres.map(centre => (
+              <div key={centre.id} className="card p-6">
+                <h3 className="font-heading text-lg text-warm-900 mb-2">
+                  {centre.name}
+                </h3>
+                <address className="not-italic text-[0.95rem] text-warm-600 leading-relaxed">
+                  {centre.address}
+                </address>
+                {live && (
+                  <a
+                    href={mapsDirectionsUrl(centre.mapsQuery)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 underline underline-offset-2 hover:text-primary-800"
+                  >
+                    Get directions
+                    <span aria-hidden="true">&rarr;</span>
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </div>

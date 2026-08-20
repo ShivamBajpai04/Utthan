@@ -31,6 +31,19 @@ type SiteConfig = {
   contact: { address: string; phone: string; email: string };
 };
 
+/**
+ * Whether the contact details and centre addresses below are real.
+ *
+ * While this is `false` the details still render, so the layout can be
+ * reviewed, but they are deliberately inert: no `tel:`/`mailto:`/maps links,
+ * a visible "to be confirmed" notice, and nothing is published to structured
+ * data. A fabricated phone number or address is worse than none — search
+ * engines cache it and people act on it.
+ *
+ * Replace the placeholders below, then set this to `true`.
+ */
+export const contactDetailsConfirmed = false;
+
 export const siteConfig: SiteConfig = {
   legalName: 'Utthan Institute of Development Studies',
   name: 'Utthan',
@@ -39,16 +52,54 @@ export const siteConfig: SiteConfig = {
   description:
     "A trusted Indian NGO working across women's safety, disability rehabilitation, community health, legal aid, and social justice.",
   logo: { src: '/images/utthan-logo.png', width: 480, height: 365 },
-  /**
-   * Fill these in with the organisation's real details. Anything left blank is
-   * hidden from the site rather than rendered as placeholder text.
-   */
+  /** Placeholders — see `contactDetailsConfirmed` before going live. */
   contact: {
-    address: '',
-    phone: '',
-    email: '',
+    address: '00 Example Road, Example Nagar, New Delhi, Delhi 110001',
+    phone: '+91 00000 00000',
+    email: 'contact@example.org',
   },
 };
+
+export type Centre = {
+  id: string;
+  /** Display name, e.g. "Head Office" or a programme centre. */
+  name: string;
+  address: string;
+  /** Free-text query handed to Google Maps. Usually name + locality. */
+  mapsQuery: string;
+};
+
+/** Centres visitors can travel to. Placeholders until confirmed. */
+export const centres: Centre[] = [
+  {
+    id: 'head-office',
+    name: 'Head Office',
+    address: '00 Example Road, Example Nagar, New Delhi, Delhi 110001',
+    mapsQuery: 'Utthan Institute of Development Studies, New Delhi',
+  },
+  {
+    id: 'koshish-centre',
+    name: 'Koshish — Disability Rehabilitation Centre',
+    address: '00 Example Street, Example Colony, New Delhi, Delhi 110002',
+    mapsQuery: 'Koshish Disability Rehabilitation Centre, New Delhi',
+  },
+];
+
+/** Google Maps link that drops a pin on the place. */
+export function mapsSearchUrl(query: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+/** Google Maps link that starts navigation from the visitor's location. */
+export function mapsDirectionsUrl(query: string): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
+}
+
+/** Digits-only form for `tel:` hrefs. */
+export function telHref(phone: string): string {
+  return `tel:${phone.replace(/[^+\d]/g, '')}`;
+}
+
 
 export const navItems = [
   { href: '/', label: 'Home' },
